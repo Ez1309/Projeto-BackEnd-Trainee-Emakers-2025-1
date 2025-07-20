@@ -8,7 +8,7 @@
 		<version>3.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ezequiel</groupId>
+	<groupId>com.biblioteca</groupId>
 	<artifactId>api-biblioteca</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>API Biblioteca</name>
