@@ -1,6 +1,9 @@
 package com.biblioteca.api_biblioteca.data.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+
+import java.time.LocalDate;
+
 import com.biblioteca.api_biblioteca.data.entity.*;
 
 public record EmprestimoRequestDTO(
@@ -9,6 +12,14 @@ public record EmprestimoRequestDTO(
     Pessoa pessoa,
 
     @NotBlank(message = "Livro é obrigatório")
-    Livro livro
+    Livro livro,
+
+    @NotBlank(message = "Data de empréstimo é obrigatória")
+    LocalDate dataEmprestimo,
+     
+    @NotBlank(message = "Data de devolução é obrigatória")
+    LocalDate dataDevolucao
+
+
 ) {
 }
