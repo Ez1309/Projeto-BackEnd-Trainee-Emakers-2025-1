@@ -1,11 +1,13 @@
 package com.biblioteca.api_biblioteca.data.entity;
 
+import com.biblioteca.api_biblioteca.data.dto.request.EmprestimoRequestDTO;
+
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name="emprestimos")
 public class Emprestimo {
@@ -21,4 +23,11 @@ public class Emprestimo {
     @ManyToOne
     @JoinColumn(name = "idLivro")
     private Livro livro;
+
+    public Emprestimo(EmprestimoRequestDTO emprestimoRequestDTO){
+        this.pessoa = emprestimoRequestDTO.pessoa();
+        this.livro = emprestimoRequestDTO.livro();
+    }
+
+    
 }

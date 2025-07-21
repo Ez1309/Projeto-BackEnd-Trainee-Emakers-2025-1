@@ -1,11 +1,13 @@
 package com.biblioteca.api_biblioteca.data.entity;
 
+import com.biblioteca.api_biblioteca.data.dto.request.PessoaRequestDTO;
+
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "pessoas")
 public class Pessoa {
@@ -28,5 +30,13 @@ public class Pessoa {
 
     @Column(name="senha", nullable = false, length = 100)
     private String senha;
+
+    public Pessoa(PessoaRequestDTO pessoaRequestDTO){
+        this.nome = pessoaRequestDTO.nome();
+        this.cpf = pessoaRequestDTO.cpf();
+        this.cep = pessoaRequestDTO.cep();
+        this.email = pessoaRequestDTO.email();
+        this.senha = pessoaRequestDTO.senha();
+    }
 
 }

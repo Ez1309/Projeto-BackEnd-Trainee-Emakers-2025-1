@@ -3,10 +3,7 @@ package com.biblioteca.api_biblioteca.data.entity;
 import java.time.LocalDate;
 import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
