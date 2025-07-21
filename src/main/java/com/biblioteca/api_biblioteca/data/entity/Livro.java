@@ -1,13 +1,16 @@
 package com.biblioteca.api_biblioteca.data.entity;
 
 import java.time.LocalDate;
-
+import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "livros")
 public class Livro {
@@ -24,5 +27,12 @@ public class Livro {
 
     @Column(name="data_lancamento", nullable = false)
     private LocalDate dataLancamento;
+
+    @Builder
+    public Livro(LivroRequestDTO livroRequestDTO){
+        this.nome = livroRequestDTO.nome();
+        this.autor = livroRequestDTO.autor();
+        this.dataLancamento = livroRequestDTO.dataLancamento();
+    }
 
 }
