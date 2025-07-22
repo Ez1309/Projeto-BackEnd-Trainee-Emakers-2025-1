@@ -4,6 +4,7 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 public record PessoaRequestDTO(
 
@@ -15,6 +16,7 @@ public record PessoaRequestDTO(
     String cpf,
 
     @NotBlank(message = "CEP é obrigatório")
+    @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "CEP deve estar no formato 00000-000 ou 00000000")
     String cep,
 
     @NotBlank(message = "Email é obrigatório")

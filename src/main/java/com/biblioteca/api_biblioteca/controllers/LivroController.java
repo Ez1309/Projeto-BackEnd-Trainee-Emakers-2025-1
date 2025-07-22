@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 
-
-
-
 @RestController
 @RequestMapping("/livro")
 public class LivroController {
@@ -47,7 +44,7 @@ public class LivroController {
     }
 
     @PutMapping (value = "/update/{idLivro}")
-    public ResponseEntity<LivroResponseDTO> atualizarLivro(@PathVariable Long idLivro, @RequestBody LivroRequestDTO livroRequestDTO){
+    public ResponseEntity<LivroResponseDTO> atualizarLivro(@PathVariable Long idLivro, @RequestBody @Valid LivroRequestDTO livroRequestDTO){
         return ResponseEntity.status(HttpStatus.OK).body(livroService.atualizarLivro(idLivro, livroRequestDTO));
     }
 

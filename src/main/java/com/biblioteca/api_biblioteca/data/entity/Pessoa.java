@@ -34,7 +34,7 @@ public class Pessoa {
     public Pessoa(PessoaRequestDTO pessoaRequestDTO){
         this.nome = pessoaRequestDTO.nome();
         this.cpf = pessoaRequestDTO.cpf();
-        this.cep = pessoaRequestDTO.cep();
+        this.cep = pessoaRequestDTO.cep().replaceAll("[^\\d]", "");
         this.email = pessoaRequestDTO.email();
         this.senha = pessoaRequestDTO.senha();
     }
