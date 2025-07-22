@@ -1,10 +1,12 @@
 package com.biblioteca.api_biblioteca.data.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-import com.biblioteca.api_biblioteca.data.entity.*;
+import com.biblioteca.api_biblioteca.data.entity.Livro;
+import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 
 public record EmprestimoRequestDTO(
 
