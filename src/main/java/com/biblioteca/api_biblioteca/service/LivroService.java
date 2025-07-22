@@ -49,7 +49,7 @@ public class LivroService {
         return new LivroResponseDTO(livro);
     }
 
-    public String deletarLivro(Long idLivro, LivroRequestDTO livroRequestDTO){
+    public String deletarLivro(Long idLivro){
         
         Livro livro = getLivroEntityById(idLivro);
 

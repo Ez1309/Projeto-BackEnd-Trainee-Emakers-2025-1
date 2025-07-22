@@ -5,12 +5,23 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LivroResponseDTO;
 import com.biblioteca.api_biblioteca.service.LivroService;
+
+import jakarta.validation.Valid;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
+
 
 
 @RestController
@@ -24,5 +35,27 @@ public class LivroController {
     public ResponseEntity<List<LivroResponseDTO>> getAllLivros(){
         return ResponseEntity.status(HttpStatus.OK).body(livroService.getAllLivros());
     }
+
+    @GetMapping(value = "/{idLivro}")
+    public ResponseEntity<LivroResponseDTO> getLivroById(@PathVariable Long idLivro){
+        return ResponseEntity.status(HttpStatus.OK).body(livroService.getLivroById(idLivro));
+    }
+
+    @PostMapping(value = "/create")
+    public ResponseEntity<LivroResponseDTO> criarLivro(@RequestBody @Valid LivroRequestDTO livroRequestDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(livroService.criarLivro(livroRequestDTO));
+    }
+
+    @PutMapping (value = "/update/{idLivro}")
+    public ResponseEntity<LivroResponseDTO> atualizarLivro(@PathVariable Long idLivro, @RequestBody LivroRequestDTO livroRequestDTO){
+        return ResponseEntity.status(HttpStatus.OK).body(livroService.atualizarLivro(idLivro, livroRequestDTO));
+    }
+
+    @DeleteMapping(value = "/delete/{idLivro}")
+    public ResponseEntity<String> deletarLivro(@PathVariable Long idLivro){
+        return ResponseEntity.status(HttpStatus.OK).body(livroService.deletarLivro(idLivro));
+    }
+
+    
     
 }
