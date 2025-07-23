@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.biblioteca.api_biblioteca.data.dto.request.PessoaRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.PessoaResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
+import com.biblioteca.api_biblioteca.exceptions.general.EntityNotFoundException;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 
 
@@ -25,8 +26,7 @@ public class PessoaService {
     }
 
     public PessoaResponseDTO getPessoaById(Long idPessoa){
-        Pessoa pessoa = pessoaRepository.findById(idPessoa).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
-
+        Pessoa pessoa = getPessoaEntityById(idPessoa);
         return new PessoaResponseDTO(pessoa);
     }
 
@@ -62,6 +62,6 @@ public class PessoaService {
     }
 
     private Pessoa getPessoaEntityById(Long idPessoa){
-        return pessoaRepository.findById(idPessoa).orElseThrow(() -> new RuntimeException("Pessoa não encontrada"));
+        return pessoaRepository.findById(idPessoa).orElseThrow(() -> new EntityNotFoundException(idPessoa));
     }
 }

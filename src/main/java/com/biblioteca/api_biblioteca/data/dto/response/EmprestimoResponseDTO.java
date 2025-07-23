@@ -2,21 +2,21 @@ package com.biblioteca.api_biblioteca.data.dto.response;
 
 import java.time.LocalDate;
 
-import com.biblioteca.api_biblioteca.data.entity.*;
+import com.biblioteca.api_biblioteca.data.entity.Emprestimo;
 
 public record EmprestimoResponseDTO(
 
     Long id,
 
-    Pessoa pessoa,
+    PessoaResponseDTO pessoaResponseDTO,
 
-    Livro livro,
+    LivroResponseDTO livroResponseDTO,
 
     LocalDate dataEmprestimo,
 
     LocalDate dataDevolucao
 ){
     public EmprestimoResponseDTO(Emprestimo emprestimo){
-        this(emprestimo.getIdEmprestimo(), emprestimo.getPessoa(), emprestimo.getLivro(), emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
+        this(emprestimo.getIdEmprestimo(), new PessoaResponseDTO(emprestimo.getPessoa()), new LivroResponseDTO(emprestimo.getLivro()), emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
     }
 }

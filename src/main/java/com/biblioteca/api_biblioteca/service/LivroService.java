@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LivroResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Livro;
+import com.biblioteca.api_biblioteca.exceptions.general.EntityNotFoundException;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
 
 @Service
@@ -24,7 +25,7 @@ public class LivroService {
     }
     
     public LivroResponseDTO getLivroById(Long idLivro){
-        Livro livro = livroRepository.findById(idLivro).orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+        Livro livro = getLivroEntityById(idLivro);
 
         return new LivroResponseDTO(livro);
     }
@@ -59,7 +60,7 @@ public class LivroService {
     }
 
     private Livro getLivroEntityById(Long idLivro){
-        return livroRepository.findById(idLivro).orElseThrow(() -> new RuntimeException("Livro não encontrado"));
+        return livroRepository.findById(idLivro).orElseThrow(() -> new EntityNotFoundException(idLivro));
     }
     
 }
