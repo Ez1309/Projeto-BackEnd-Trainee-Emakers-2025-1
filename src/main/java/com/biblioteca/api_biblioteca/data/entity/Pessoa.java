@@ -1,5 +1,12 @@
 package com.biblioteca.api_biblioteca.data.entity;
 
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import com.biblioteca.api_biblioteca.data.dto.request.PessoaRequestDTO;
 
 import jakarta.persistence.*;
@@ -10,7 +17,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "pessoas")
-public class Pessoa {
+public class Pessoa implements UserDetails {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -31,12 +38,44 @@ public class Pessoa {
     @Column(name="senha", nullable = false, length = 100)
     private String senha;
 
+    private PessoaRole role;
+
+
+
     public Pessoa(PessoaRequestDTO pessoaRequestDTO){
         this.nome = pessoaRequestDTO.nome();
         this.cpf = pessoaRequestDTO.cpf();
         this.cep = pessoaRequestDTO.cep().replaceAll("[^\\d]", "");
         this.email = pessoaRequestDTO.email();
         this.senha = pessoaRequestDTO.senha();
+    }
+
+    public Pessoa(String email, String senha, PessoaRole role){
+        this.email = email;
+        this.senha = senha;
+        this.role = role;
+    }
+
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == PessoaRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_PESSOA"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_PESSOA"));
+    }
+
+
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
+
+
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
 }
