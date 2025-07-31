@@ -1,11 +1,9 @@
 package com.biblioteca.api_biblioteca.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,7 +41,7 @@ public class AuthenticationController {
         
         String senhaCriptografada = new BCryptPasswordEncoder().encode(data.senha());
 
-        Pessoa novaPessoa = new Pessoa(data.email(), senhaCriptografada, data.role());
+        Pessoa novaPessoa = new Pessoa(data.nome(), data.cpf(), data.cep(), data.email(), senhaCriptografada, data.role());
 
         this. pessoaRepository.save(novaPessoa);
 

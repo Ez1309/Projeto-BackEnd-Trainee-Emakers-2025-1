@@ -38,7 +38,10 @@ public class Pessoa implements UserDetails {
     @Column(name="senha", nullable = false, length = 100)
     private String senha;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name="role", nullable = false, length = 50)
     private PessoaRole role;
+
 
 
 
@@ -48,9 +51,13 @@ public class Pessoa implements UserDetails {
         this.cep = pessoaRequestDTO.cep().replaceAll("[^\\d]", "");
         this.email = pessoaRequestDTO.email();
         this.senha = pessoaRequestDTO.senha();
+        this.role = pessoaRequestDTO.role();
     }
 
-    public Pessoa(String email, String senha, PessoaRole role){
+    public Pessoa(String nome, String cpf, String cep, String email, String senha, PessoaRole role){
+        this.nome = nome;
+        this.cpf = cpf;
+        this.cep = cep;
         this.email = email;
         this.senha = senha;
         this.role = role;

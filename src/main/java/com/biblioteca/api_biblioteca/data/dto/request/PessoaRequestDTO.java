@@ -2,8 +2,11 @@ package com.biblioteca.api_biblioteca.data.dto.request;
 
 import org.hibernate.validator.constraints.br.CPF;
 
+import com.biblioteca.api_biblioteca.data.entity.PessoaRole;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -29,7 +32,10 @@ public record PessoaRequestDTO(
 
     @NotBlank(message = "Senha é obrigatória")
     @Size(max = 100, message = "O campo senha não pode ultrapassar {max} caracteres")
-    String senha
+    String senha,
+
+    @NotNull(message = "O role é obrigatório")
+    PessoaRole role
 ) {
     
 }
