@@ -41,8 +41,6 @@ public class SecurityConfig {
                 // Resto das rotas liberadas para quem estiver credenciado
                 .anyRequest().authenticated()
                 
-
-                
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         

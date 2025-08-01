@@ -2,15 +2,14 @@ package com.biblioteca.api_biblioteca.config;
 
 import java.io.IOException;
 
-import org.apache.commons.lang3.ObjectUtils.Null;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 
 import jakarta.servlet.FilterChain;
@@ -28,7 +27,7 @@ public class SecurityFilter extends OncePerRequestFilter{
     PessoaRepository pessoaRepository;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @org.springframework.lang.NonNull HttpServletResponse response, @org.springframework.lang.NonNull FilterChain filterChain) throws ServletException, IOException{
         var token = this.recoverToken(request);
 
         System.out.println("\n\n\n\nToken recebido: " + token + "\n\n\n");
