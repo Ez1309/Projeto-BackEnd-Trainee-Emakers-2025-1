@@ -3,7 +3,7 @@ package com.biblioteca.api_biblioteca.data.entity;
 public enum PessoaRole {
     
     ADMIN("admin"),
-    PESSOA("pessoa");
+    USER("user");
 
     private String role;
 

@@ -15,7 +15,7 @@ import lombok.*;
 public class Emprestimo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idEmprestimo;
     
     @ManyToOne

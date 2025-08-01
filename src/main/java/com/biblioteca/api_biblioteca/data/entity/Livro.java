@@ -13,7 +13,7 @@ import lombok.*;
 public class Livro {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long idLivro;
 
     @Column(name="nome", nullable = false, length = 100)

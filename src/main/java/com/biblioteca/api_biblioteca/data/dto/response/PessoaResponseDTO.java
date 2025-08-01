@@ -1,6 +1,7 @@
 package com.biblioteca.api_biblioteca.data.dto.response;
 
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
+import com.biblioteca.api_biblioteca.data.entity.PessoaRole;
 
 public record PessoaResponseDTO(
 
@@ -14,9 +15,11 @@ public record PessoaResponseDTO(
 
     String email,
 
-    String senha
+    String senha,
+
+    PessoaRole papel
 ){
     public PessoaResponseDTO(Pessoa pessoa){
-        this(pessoa.getIdPessoa(), pessoa.getNome(), pessoa.getCpf(), pessoa.getCep(), pessoa.getEmail(), pessoa.getSenha());
+        this(pessoa.getIdPessoa(), pessoa.getNome(), pessoa.getCpf(), pessoa.getCep(), pessoa.getEmail(), pessoa.getSenha(), pessoa.getRole());
     }
 }

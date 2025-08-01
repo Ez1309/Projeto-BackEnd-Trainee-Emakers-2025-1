@@ -20,7 +20,7 @@ import lombok.*;
 public class Pessoa implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long idPessoa;
 
     @Column(name="nome", nullable = false, length = 100)
@@ -54,21 +54,21 @@ public class Pessoa implements UserDetails {
         this.role = pessoaRequestDTO.role();
     }
 
-    public Pessoa(String nome, String cpf, String cep, String email, String senha, PessoaRole role){
+    public Pessoa(String nome, String cpf, String cep, String email, String senha){
         this.nome = nome;
         this.cpf = cpf;
         this.cep = cep;
         this.email = email;
         this.senha = senha;
-        this.role = role;
+        this.role = PessoaRole.USER;
     }
 
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == PessoaRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_PESSOA"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_PESSOA"));
+        if(this.role == PessoaRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
 
