@@ -3,6 +3,10 @@ CREATE TABLE IF NOT EXISTS pessoas (
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(11) NOT NULL,
     cep VARCHAR(9) NOT NULL,
+    rua VARCHAR(100),
+    bairro VARCHAR(100),
+    cidade VARCHAR(100),
+    estado VARCHAR(2),
     email VARCHAR(100) NOT NULL,
     senha VARCHAR(100) NOT NULL,
     role VARCHAR(50) NOT NULL

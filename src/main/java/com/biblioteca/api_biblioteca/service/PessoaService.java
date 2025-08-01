@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.biblioteca.api_biblioteca.client.EnderecoViaCep;
+import com.biblioteca.api_biblioteca.client.ViaCepClient;
 import com.biblioteca.api_biblioteca.data.dto.request.PessoaRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.PessoaResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
@@ -19,6 +21,9 @@ public class PessoaService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    @Autowired
+    private ViaCepClient viaCepClient;
+
     public List<PessoaResponseDTO> getAllPessoas(){
         List<Pessoa> pessoas = pessoaRepository.findAll();
 
@@ -31,7 +36,24 @@ public class PessoaService {
     }
 
     public PessoaResponseDTO criarPessoa(PessoaRequestDTO pessoaRequestDTO){
+
+        String cepLimpo = pessoaRequestDTO.cep().replaceAll("[^\\d]", "");
+        EnderecoViaCep endereco = viaCepClient.consultaCep(cepLimpo);
+
+        // A lógica de validação continua a mesma
+        if (endereco != null && Boolean.TRUE.equals(endereco.erro())) {
+            throw new RuntimeException();
+        }
+
         Pessoa pessoa = new Pessoa(pessoaRequestDTO);
+
+        if (endereco != null) {
+            pessoa.setRua(endereco.logradouro());
+            pessoa.setBairro(endereco.bairro());
+            pessoa.setCidade(endereco.localidade());
+            pessoa.setEstado(endereco.uf());
+        }
+
         pessoaRepository.save(pessoa);
 
         return new PessoaResponseDTO(pessoa);

@@ -32,6 +32,18 @@ public class Pessoa implements UserDetails {
     @Column(name="cep", nullable = false, length = 9)
     private String cep;
 
+    @Column(name="rua", length = 100)
+    private String rua;
+
+    @Column(name="bairro", length = 100)
+    private String bairro;
+
+    @Column(name="cidade", length = 100)
+    private String cidade;
+
+    @Column(name="estado", length = 2)
+    private String estado;
+
     @Column(name="email", nullable = false, length = 100)
     private String email;
 

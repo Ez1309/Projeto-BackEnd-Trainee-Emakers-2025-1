@@ -13,6 +13,14 @@ public record PessoaResponseDTO(
 
     String cep,
 
+    String rua,
+
+    String bairro,
+
+    String cidade,
+
+    String estado,
+
     String email,
 
     String senha,
@@ -20,6 +28,6 @@ public record PessoaResponseDTO(
     PessoaRole papel
 ){
     public PessoaResponseDTO(Pessoa pessoa){
-        this(pessoa.getIdPessoa(), pessoa.getNome(), pessoa.getCpf(), pessoa.getCep(), pessoa.getEmail(), pessoa.getSenha(), pessoa.getRole());
+        this(pessoa.getIdPessoa(), pessoa.getNome(), pessoa.getCpf(), pessoa.getCep(), pessoa.getRua(), pessoa.getBairro(), pessoa.getCidade(), pessoa.getEstado(), pessoa.getEmail(), pessoa.getSenha(), pessoa.getRole());
     }
 }

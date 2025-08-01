@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.biblioteca.api_biblioteca.client.EnderecoViaCep;
+import com.biblioteca.api_biblioteca.client.ViaCepClient;
 import com.biblioteca.api_biblioteca.config.TokenService;
 import com.biblioteca.api_biblioteca.data.dto.request.AuthenticationDTO;
 import com.biblioteca.api_biblioteca.data.dto.request.RegisterDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LoginResponseDTO;
+import com.biblioteca.api_biblioteca.data.dto.response.PessoaResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 
@@ -31,6 +34,9 @@ public class AuthenticationController {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private ViaCepClient viaCepClient;
     
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO autenticacao){
@@ -47,9 +53,23 @@ public class AuthenticationController {
         // Verificar essa parte pra throw exception de usuário já existente
         if (this.pessoaRepository.findByEmail(data.email()) != null) return ResponseEntity.badRequest().build();
         
+        String cepLimpo = data.cep().replaceAll("[^\\d]", "");
+        EnderecoViaCep endereco = viaCepClient.consultaCep(cepLimpo);
+
+        if (endereco != null && Boolean.TRUE.equals(endereco.erro())) {
+            throw new RuntimeException();
+        }
+
         String senhaCriptografada = new BCryptPasswordEncoder().encode(data.senha());
 
         Pessoa novaPessoa = new Pessoa(data.nome(), data.cpf(), data.cep(), data.email(), senhaCriptografada);
+
+        if (endereco != null) {
+            novaPessoa.setRua(endereco.logradouro());
+            novaPessoa.setBairro(endereco.bairro());
+            novaPessoa.setCidade(endereco.localidade());
+            novaPessoa.setEstado(endereco.uf());
+        }
 
         this. pessoaRepository.save(novaPessoa);
 

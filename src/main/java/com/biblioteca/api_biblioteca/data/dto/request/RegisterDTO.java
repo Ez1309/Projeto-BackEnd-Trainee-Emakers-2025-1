@@ -25,6 +25,14 @@ public record RegisterDTO(
     @Pattern(regexp = "^\\d{5}-?\\d{3}$", message = "CEP deve estar no formato 00000-000 ou 00000000")
     String cep,
 
+    String rua,
+
+    String bairro,
+
+    String cidade,
+
+    String estado,
+
     @NotBlank(message = "Email é obrigatório")
     @Size(max = 100, message = "O campo email não pode ultrapassar {max} caracteres")
     @Email(message = "Email inválido")
