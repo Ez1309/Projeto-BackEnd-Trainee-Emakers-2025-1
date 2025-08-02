@@ -16,7 +16,6 @@ import com.biblioteca.api_biblioteca.config.TokenService;
 import com.biblioteca.api_biblioteca.data.dto.request.AuthenticationDTO;
 import com.biblioteca.api_biblioteca.data.dto.request.RegisterDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LoginResponseDTO;
-import com.biblioteca.api_biblioteca.data.dto.response.PessoaResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 

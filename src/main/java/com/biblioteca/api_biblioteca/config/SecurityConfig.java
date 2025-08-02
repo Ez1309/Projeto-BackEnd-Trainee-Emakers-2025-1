@@ -26,19 +26,26 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Desabilita CSRF
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                // Endpoints públicos de autenticação
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
-            
 
-                // Crud pessoa só pode ser feito por administrador
+                // Regras para Livros (Admin gerencia, todos podem ver)
+                .requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/livros/**").authenticated() // Qualquer usuário logado pode ver os livros
+
+                // --- REGRAS PARA EMPRÉSTIMOS (AQUI ESTÁ O AJUSTE) ---
+                .requestMatchers(HttpMethod.POST, "/emprestimos").hasRole("USER") // Um USER pode criar um empréstimo
+                .requestMatchers(HttpMethod.PATCH, "/emprestimos/**").hasRole("USER") // UM USER PODE FAZER PATCH (DEVOLUÇÃO)
+                .requestMatchers(HttpMethod.GET, "/emprestimos").hasRole("ADMIN") // Apenas ADMIN vê a lista completa
+                .requestMatchers(HttpMethod.GET, "/emprestimos/**").authenticated() // Um user pode ver seu próprio empréstimo (lógica no service)
+
+                // Regras para Pessoas (só admin)
                 .requestMatchers("/pessoa/**").hasRole("ADMIN")
 
-                // Só admin pode criar, atualizar e deletar um livro
-                .requestMatchers(HttpMethod.POST, "/livro/create").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/livro/update/{id}").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/livro/delete/{id}").hasRole("ADMIN")
-
-                // Resto das rotas liberadas para quem estiver credenciado
+                // Qualquer outra requisição precisa no mínimo de autenticação
                 .anyRequest().authenticated()
                 
             )

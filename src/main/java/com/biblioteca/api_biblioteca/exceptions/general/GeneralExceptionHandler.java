@@ -1,5 +1,6 @@
 package com.biblioteca.api_biblioteca.exceptions.general;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,5 +60,19 @@ public class GeneralExceptionHandler{
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    // Este método será chamado sempre que uma BusinessException for lançada em qualquer controller
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Object> handleBusinessException(BusinessException ex) {
+        // Criamos um corpo de erro JSON personalizado
+        Map<String, Object> body = Map.of(
+            "timestamp", LocalDateTime.now(),
+            "status", HttpStatus.BAD_REQUEST.value(),
+            "error", "Bad Request",
+            "message", ex.getMessage() // A mensagem que definimos no serviço
+        );
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }

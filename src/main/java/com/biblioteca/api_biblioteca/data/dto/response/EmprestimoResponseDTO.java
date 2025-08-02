@@ -3,6 +3,7 @@ package com.biblioteca.api_biblioteca.data.dto.response;
 import java.time.LocalDate;
 
 import com.biblioteca.api_biblioteca.data.entity.Emprestimo;
+import com.biblioteca.api_biblioteca.data.entity.StatusEmprestimo;
 
 public record EmprestimoResponseDTO(
 
@@ -14,9 +15,13 @@ public record EmprestimoResponseDTO(
 
     LocalDate dataEmprestimo,
 
-    LocalDate dataDevolucao
+    LocalDate dataDevolucaoAgendada,
+
+    LocalDate dataDevolucaoReal,
+
+    StatusEmprestimo status
 ){
     public EmprestimoResponseDTO(Emprestimo emprestimo){
-        this(emprestimo.getIdEmprestimo(), new PessoaResponseDTO(emprestimo.getPessoa()), new LivroResponseDTO(emprestimo.getLivro()), emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucao());
+        this(emprestimo.getIdEmprestimo(), new PessoaResponseDTO(emprestimo.getPessoa()), new LivroResponseDTO(emprestimo.getLivro()), emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucaoAgendada(), emprestimo.getDataDevolucaoReal(), emprestimo.getStatus());
     }
 }

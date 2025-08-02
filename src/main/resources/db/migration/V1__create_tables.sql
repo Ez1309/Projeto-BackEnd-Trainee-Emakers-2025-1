@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS livros (
     id_livro SERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     autor VARCHAR(100) NOT NULL,
-    data_lancamento DATE NOT NULL
+    data_lancamento DATE NOT NULL,
+    disponivel BOOLEAN NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS emprestimos (
@@ -24,7 +25,9 @@ CREATE TABLE IF NOT EXISTS emprestimos (
     id_pessoa INT NOT NULL,
     id_livro INT NOT NULL,
     data_emprestimo DATE NOT NULL,
-    data_devolucao DATE NOT NULL,
+    data_devolucao_agendada DATE NOT NULL,
+    data_devolucao_real DATE NULL,
+    status VARCHAR(50) NOT NULL,
     
     CONSTRAINT fk_pessoa FOREIGN KEY (id_pessoa) REFERENCES pessoas(id_pessoa),
     CONSTRAINT fk_livro FOREIGN KEY (id_livro) REFERENCES livros(id_livro)

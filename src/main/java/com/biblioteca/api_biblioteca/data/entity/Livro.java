@@ -25,11 +25,16 @@ public class Livro {
     @Column(name="data_lancamento", nullable = false)
     private LocalDate dataLancamento;
 
+    @Column(name="disponivel", nullable = false)
+    private Boolean disponivel = true;
+
     @Builder
     public Livro(LivroRequestDTO livroRequestDTO){
         this.nome = livroRequestDTO.nome();
         this.autor = livroRequestDTO.autor();
         this.dataLancamento = livroRequestDTO.dataLancamento();
+        // VOLTAR DEPOIS
+        this.disponivel = true;
     }
 
 }

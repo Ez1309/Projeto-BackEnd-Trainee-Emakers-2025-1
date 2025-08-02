@@ -2,8 +2,6 @@ package com.biblioteca.api_biblioteca.data.entity;
 
 import java.time.LocalDate;
 
-import com.biblioteca.api_biblioteca.data.dto.request.EmprestimoRequestDTO;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,15 +27,14 @@ public class Emprestimo {
     @Column(name = "data_emprestimo", nullable = false)
     private LocalDate dataEmprestimo;
 
-    @Column(name = "data_Devolucao", nullable = false)
-    private LocalDate dataDevolucao;
+    @Column(name = "data_devolucao_agendada", nullable = false)
+    private LocalDate dataDevolucaoAgendada;
 
-    public Emprestimo(EmprestimoRequestDTO emprestimoRequestDTO){
-        this.pessoa = emprestimoRequestDTO.pessoa();
-        this.livro = emprestimoRequestDTO.livro();
-        this.dataEmprestimo = emprestimoRequestDTO.dataEmprestimo();
-        this.dataDevolucao = emprestimoRequestDTO.dataDevolucao();
-    }
+    @Column(name = "data_devolucao_real")
+    private LocalDate dataDevolucaoReal;
 
-    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private StatusEmprestimo status;
+
 }

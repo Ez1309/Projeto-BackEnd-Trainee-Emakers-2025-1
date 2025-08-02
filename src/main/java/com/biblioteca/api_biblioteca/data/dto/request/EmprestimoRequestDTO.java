@@ -1,32 +1,22 @@
 package com.biblioteca.api_biblioteca.data.dto.request;
 
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 
-import com.biblioteca.api_biblioteca.data.entity.Livro;
-import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.fasterxml.jackson.annotation.JsonFormat;
+
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotNull;
 
 public record EmprestimoRequestDTO(
 
-    @NotNull(message = "Pessoa é obrigatória")
-    Pessoa pessoa,
+    @NotNull(message = "O ID do livro é obrigatório")
+    Long idLivro,
 
-    @NotNull(message = "Livro é obrigatório")
-    Livro livro,
-
-    @NotNull(message = "Data de empréstimo é obrigatória")
+    @NotNull(message = "A data de devolução agendada é obrigatória")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    @FutureOrPresent(message = "A data do empréstimo não pode estar no passado")
-    LocalDate dataEmprestimo,
-     
-    @NotNull(message = "Data de devolução é obrigatória")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @FutureOrPresent(message = "A data de devolução não pode estar no passado")
-    LocalDate dataDevolucao
-
+    // Usar @Future é mais adequado aqui, pois a devolução deve ser pelo menos no dia seguinte.
+    @Future(message = "A data de devolução deve ser uma data futura.")
+    LocalDate dataDevolucaoAgendada
 
 ) {
 }
