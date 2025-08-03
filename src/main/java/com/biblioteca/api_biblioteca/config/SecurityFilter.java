@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
+import com.biblioteca.api_biblioteca.service.security.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -29,8 +30,6 @@ public class SecurityFilter extends OncePerRequestFilter{
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @org.springframework.lang.NonNull HttpServletResponse response, @org.springframework.lang.NonNull FilterChain filterChain) throws ServletException, IOException{
         var token = this.recoverToken(request);
-
-        System.out.println("\n\n\n\nToken recebido: " + token + "\n\n\n");
 
         if (token != null){
             var email = tokenService.validarToken(token);

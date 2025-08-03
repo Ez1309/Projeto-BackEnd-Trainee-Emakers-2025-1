@@ -30,17 +30,21 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
 
+                // Acesso ao swagger
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
                 // Regras para Livros (Admin gerencia, todos podem ver)
                 .requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/livros/**").authenticated() // Qualquer usuário logado pode ver os livros
 
-                // --- REGRAS PARA EMPRÉSTIMOS (AQUI ESTÁ O AJUSTE) ---
-                .requestMatchers(HttpMethod.POST, "/emprestimos").hasRole("USER") // Um USER pode criar um empréstimo
-                .requestMatchers(HttpMethod.PATCH, "/emprestimos/**").hasRole("USER") // UM USER PODE FAZER PATCH (DEVOLUÇÃO)
-                .requestMatchers(HttpMethod.GET, "/emprestimos").hasRole("ADMIN") // Apenas ADMIN vê a lista completa
-                .requestMatchers(HttpMethod.GET, "/emprestimos/**").authenticated() // Um user pode ver seu próprio empréstimo (lógica no service)
+                // --- REGRAS PARA EMPRÉSTIMOS (AQUI ESTÁ O AJUSTE) ---\
+                .requestMatchers(HttpMethod.POST, "/emprestimos/create").hasRole("USER")
+                .requestMatchers(HttpMethod.PATCH, "/emprestimos/{idEmprestimo}/devolucao").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/emprestimos/all").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/emprestimos/meus-emprestimos").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/emprestimos/{idEmprestimo}").authenticated()
 
                 // Regras para Pessoas (só admin)
                 .requestMatchers("/pessoa/**").hasRole("ADMIN")

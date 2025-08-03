@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LivroResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Livro;
-import com.biblioteca.api_biblioteca.exceptions.general.EntityNotFoundException;
+import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
 
 @Service
@@ -60,7 +60,7 @@ public class LivroService {
     }
 
     private Livro getLivroEntityById(Long idLivro){
-        return livroRepository.findById(idLivro).orElseThrow(() -> new EntityNotFoundException(idLivro));
+        return livroRepository.findById(idLivro).orElseThrow(() -> new EntidadeNaoEncontradaException(idLivro));
     }
     
 }

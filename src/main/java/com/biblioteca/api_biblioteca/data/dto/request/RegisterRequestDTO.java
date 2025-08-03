@@ -1,16 +1,12 @@
 package com.biblioteca.api_biblioteca.data.dto.request;
 
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.beans.factory.annotation.Value;
-
-import com.biblioteca.api_biblioteca.data.entity.PessoaRole;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record RegisterDTO(
+public record RegisterRequestDTO(
 
     @NotBlank(message = "Nome é obrigatório")
     @Size(max = 100, message = "O campo nome não pode ultrapassar {max} caracteres")
@@ -40,10 +36,8 @@ public record RegisterDTO(
 
     @NotBlank(message = "Senha é obrigatória")
     @Size(max = 100, message = "O campo senha não pode ultrapassar {max} caracteres")
-    String senha,
+    String senha
 
-    @Value("user")
-    PessoaRole role
 ) {
     
 }

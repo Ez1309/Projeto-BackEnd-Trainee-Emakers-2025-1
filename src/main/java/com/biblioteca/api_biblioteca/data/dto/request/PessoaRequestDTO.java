@@ -2,7 +2,7 @@ package com.biblioteca.api_biblioteca.data.dto.request;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.biblioteca.api_biblioteca.data.entity.PessoaRole;
+import com.biblioteca.api_biblioteca.data.enums.PessoaRole;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

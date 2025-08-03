@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS pessoas (
-    id_pessoa SERIAL PRIMARY KEY,
+    id_pessoa BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(11) NOT NULL,
     cep VARCHAR(9) NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS pessoas (
 );
 
 CREATE TABLE IF NOT EXISTS livros (
-    id_livro SERIAL PRIMARY KEY,
+    id_livro BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     autor VARCHAR(100) NOT NULL,
     data_lancamento DATE NOT NULL,
@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS livros (
 );
 
 CREATE TABLE IF NOT EXISTS emprestimos (
-    id_emprestimo SERIAL PRIMARY KEY,
-    id_pessoa INT NOT NULL,
-    id_livro INT NOT NULL,
+    id_emprestimo BIGSERIAL PRIMARY KEY,
+    id_pessoa BIGINT NOT NULL,
+    id_livro BIGINT NOT NULL,
     data_emprestimo DATE NOT NULL,
     data_devolucao_agendada DATE NOT NULL,
     data_devolucao_real DATE NULL,

@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.biblioteca.api_biblioteca.data.dto.request.PessoaRequestDTO;
+import com.biblioteca.api_biblioteca.data.enums.PessoaRole;
 
 import jakarta.persistence.*;
 import lombok.*;

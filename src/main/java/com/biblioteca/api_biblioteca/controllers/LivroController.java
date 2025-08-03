@@ -33,22 +33,22 @@ public class LivroController {
         return ResponseEntity.status(HttpStatus.OK).body(livroService.getAllLivros());
     }
 
-    @GetMapping(value = "/{idLivro}")
+    @GetMapping(value = "/{idLivro}/find")
     public ResponseEntity<LivroResponseDTO> getLivroById(@PathVariable Long idLivro){
         return ResponseEntity.status(HttpStatus.OK).body(livroService.getLivroById(idLivro));
     }
 
     @PostMapping(value = "/create")
     public ResponseEntity<LivroResponseDTO> criarLivro(@RequestBody @Valid LivroRequestDTO livroRequestDTO){
-        return ResponseEntity.status(HttpStatus.OK).body(livroService.criarLivro(livroRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(livroService.criarLivro(livroRequestDTO));
     }
 
-    @PutMapping (value = "/update/{idLivro}")
+    @PutMapping (value = "/{idLivro}/update")
     public ResponseEntity<LivroResponseDTO> atualizarLivro(@PathVariable Long idLivro, @RequestBody @Valid LivroRequestDTO livroRequestDTO){
         return ResponseEntity.status(HttpStatus.OK).body(livroService.atualizarLivro(idLivro, livroRequestDTO));
     }
 
-    @DeleteMapping(value = "/delete/{idLivro}")
+    @DeleteMapping(value = "/{idLivro}/delete")
     public ResponseEntity<String> deletarLivro(@PathVariable Long idLivro){
         return ResponseEntity.status(HttpStatus.OK).body(livroService.deletarLivro(idLivro));
     }

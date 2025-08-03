@@ -3,7 +3,7 @@ package com.biblioteca.api_biblioteca.data.dto.response;
 import java.time.LocalDate;
 
 import com.biblioteca.api_biblioteca.data.entity.Emprestimo;
-import com.biblioteca.api_biblioteca.data.entity.StatusEmprestimo;
+import com.biblioteca.api_biblioteca.data.enums.StatusEmprestimo;
 
 public record EmprestimoResponseDTO(
 

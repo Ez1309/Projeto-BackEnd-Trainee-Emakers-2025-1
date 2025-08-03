@@ -1,5 +1,5 @@
 package com.biblioteca.api_biblioteca.data.dto.request;
 
-public record AuthenticationDTO (String email, String senha) {
+public record AuthRequestDTO (String email, String senha) {
     
 }

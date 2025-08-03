@@ -1,4 +1,4 @@
-package com.biblioteca.api_biblioteca.config;
+package com.biblioteca.api_biblioteca.service.security;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

@@ -11,7 +11,7 @@ import com.biblioteca.api_biblioteca.client.ViaCepClient;
 import com.biblioteca.api_biblioteca.data.dto.request.PessoaRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.PessoaResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
-import com.biblioteca.api_biblioteca.exceptions.general.EntityNotFoundException;
+import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 
 
@@ -84,6 +84,6 @@ public class PessoaService {
     }
 
     private Pessoa getPessoaEntityById(Long idPessoa){
-        return pessoaRepository.findById(idPessoa).orElseThrow(() -> new EntityNotFoundException(idPessoa));
+        return pessoaRepository.findById(idPessoa).orElseThrow(() -> new EntidadeNaoEncontradaException(idPessoa));
     }
 }

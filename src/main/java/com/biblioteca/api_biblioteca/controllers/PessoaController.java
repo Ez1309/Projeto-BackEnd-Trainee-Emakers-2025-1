@@ -36,17 +36,17 @@ public class PessoaController {
         return ResponseEntity.status(HttpStatus.OK).body(pessoaService.getAllPessoas());
     }
 
-    @GetMapping(value = "/{idPessoa}")
+    @GetMapping(value = "/{idPessoa}/find")
     public ResponseEntity<PessoaResponseDTO> getPessoaById(@PathVariable Long idPessoa){
         return ResponseEntity.status(HttpStatus.OK).body(pessoaService.getPessoaById(idPessoa));
     }
 
     @PostMapping(value = "/create")
     public ResponseEntity<PessoaResponseDTO> criarPessoa(@RequestBody @Valid PessoaRequestDTO pessoaRequestDTO){
-        return ResponseEntity.status(HttpStatus.OK).body(pessoaService.criarPessoa(pessoaRequestDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.criarPessoa(pessoaRequestDTO));
     }
 
-    @PutMapping (value = "/update/{idPessoa}")
+    @PutMapping (value = "/{idPessoa}/update")
     public ResponseEntity<PessoaResponseDTO> atualizarPessoa(@PathVariable Long idPessoa, @RequestBody @Valid PessoaRequestDTO pessoaRequestDTO){
         return ResponseEntity.status(HttpStatus.OK).body(pessoaService.atualizarPessoa(idPessoa, pessoaRequestDTO));
     }

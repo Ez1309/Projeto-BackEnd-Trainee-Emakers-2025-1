@@ -2,6 +2,8 @@ package com.biblioteca.api_biblioteca.data.entity;
 
 import java.time.LocalDate;
 
+import com.biblioteca.api_biblioteca.data.enums.StatusEmprestimo;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +16,7 @@ public class Emprestimo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long idEmprestimo;
+    private Long idEmprestimo;
     
     @ManyToOne
     @JoinColumn(name = "idPessoa")

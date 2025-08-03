@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.api_biblioteca.data.dto.request.EmprestimoRequestDTO;
@@ -14,9 +13,9 @@ import com.biblioteca.api_biblioteca.data.dto.response.EmprestimoResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Emprestimo;
 import com.biblioteca.api_biblioteca.data.entity.Livro;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
-import com.biblioteca.api_biblioteca.data.entity.StatusEmprestimo;
-import com.biblioteca.api_biblioteca.exceptions.general.BusinessException;
-import com.biblioteca.api_biblioteca.exceptions.general.EntityNotFoundException;
+import com.biblioteca.api_biblioteca.data.enums.StatusEmprestimo;
+import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
+import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
 import com.biblioteca.api_biblioteca.repository.EmprestimoRepository;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
 
@@ -31,23 +30,21 @@ public class EmprestimoService {
     @Autowired
     private LivroRepository livroRepository;
 
-
-
     @Transactional
     public EmprestimoResponseDTO criarEmprestimo(EmprestimoRequestDTO emprestimoRequestDTO, Pessoa pessoaLogada){
 
         Livro livro = livroRepository.findById(emprestimoRequestDTO.idLivro())
         // Exceção caso não encontre o livro
-        .orElseThrow(() -> new EntityNotFoundException(emprestimoRequestDTO.idLivro()));
+        .orElseThrow(() -> new EntidadeNaoEncontradaException(emprestimoRequestDTO.idLivro()));
 
         // Exceção caso o livro não esteja disponível para empréstimo
         if(!livro.getDisponivel()){
-            throw new BusinessException("O livro '" + livro.getNome() + "' não está disponível para empréstimo");
+            throw new OperacaoInvalidaException("O livro '" + livro.getNome() + "' não está disponível para empréstimo");
         }
 
         long diasDeEmprestimo = ChronoUnit.DAYS.between(LocalDate.now(), emprestimoRequestDTO.dataDevolucaoAgendada());
         if (diasDeEmprestimo > 180){
-            throw new BusinessException("O período máximo de empréstimo é de 180 dias (6 meses)");
+            throw new OperacaoInvalidaException("O período máximo de empréstimo é de 180 dias (6 meses)");
         }
 
 
@@ -71,11 +68,11 @@ public class EmprestimoService {
         Emprestimo emprestimo = getEmprestimoEntityById(idEmprestimo);
 
         if(!emprestimo.getPessoa().getIdPessoa().equals(pessoaLogada.getIdPessoa())){
-            throw new BusinessException("Você não tem permissão para devolver um empréstimo que não é seu.");
+            throw new OperacaoInvalidaException("Você não tem permissão para devolver um empréstimo que não é seu.");
         }
 
         if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
-            throw new BusinessException("Esse empréstimo já foi finalizado.");
+            throw new OperacaoInvalidaException("Esse empréstimo já foi finalizado.");
         }
 
         emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
@@ -88,6 +85,14 @@ public class EmprestimoService {
         emprestimoRepository.save(emprestimo);
 
         return new EmprestimoResponseDTO(emprestimo);
+    }
+
+    @Transactional
+    public List<EmprestimoResponseDTO> getEmprestimos(Pessoa pessoaLogada){
+        List<Emprestimo> emprestimos = emprestimoRepository.findByPessoa(pessoaLogada);
+        return emprestimos.stream()
+        .map(EmprestimoResponseDTO::new)
+        .collect(Collectors.toList());
     }
 
     // public EmprestimoResponseDTO atualizarEmprestimo(Long idEmprestimo, EmprestimoRequestDTO emprestimoRequestDTO){
@@ -123,7 +128,7 @@ public class EmprestimoService {
     }
 
     private Emprestimo getEmprestimoEntityById(Long idEmprestimo){
-        return emprestimoRepository.findById(idEmprestimo).orElseThrow(() -> new EntityNotFoundException(idEmprestimo));
+        return emprestimoRepository.findById(idEmprestimo).orElseThrow(() -> new EntidadeNaoEncontradaException(idEmprestimo));
     }
     
 }
