@@ -15,6 +15,9 @@ import com.biblioteca.api_biblioteca.data.entity.Livro;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.biblioteca.api_biblioteca.data.enums.StatusEmprestimo;
 import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
+import com.biblioteca.api_biblioteca.exceptions.emprestimo.EmprestimoFinalizadoException;
+import com.biblioteca.api_biblioteca.exceptions.emprestimo.LivroIndisponivelException;
+import com.biblioteca.api_biblioteca.exceptions.emprestimo.PrazoExcedidoException;
 import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
 import com.biblioteca.api_biblioteca.repository.EmprestimoRepository;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
@@ -39,12 +42,12 @@ public class EmprestimoService {
 
         // Exceção caso o livro não esteja disponível para empréstimo
         if(!livro.getDisponivel()){
-            throw new OperacaoInvalidaException("O livro '" + livro.getNome() + "' não está disponível para empréstimo");
+            throw new LivroIndisponivelException("O livro '" + livro.getNome() + "' não está disponível para empréstimo");
         }
 
         long diasDeEmprestimo = ChronoUnit.DAYS.between(LocalDate.now(), emprestimoRequestDTO.dataDevolucaoAgendada());
         if (diasDeEmprestimo > 180){
-            throw new OperacaoInvalidaException("O período máximo de empréstimo é de 180 dias (6 meses)");
+            throw new PrazoExcedidoException("O período máximo de empréstimo é de 180 dias (6 meses)");
         }
 
 
@@ -72,7 +75,7 @@ public class EmprestimoService {
         }
 
         if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
-            throw new OperacaoInvalidaException("Esse empréstimo já foi finalizado.");
+            throw new EmprestimoFinalizadoException("Esse empréstimo já foi finalizado.");
         }
 
         emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);

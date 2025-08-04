@@ -19,7 +19,7 @@ public class SecurityConfig {
 
     @Autowired
     SecurityFilter securityFilter;
-
+    
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -55,7 +55,6 @@ public class SecurityConfig {
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         
-
         return http.build();
     }
 

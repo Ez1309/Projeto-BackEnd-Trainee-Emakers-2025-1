@@ -3,13 +3,20 @@ package com.biblioteca.api_biblioteca.exceptions.general;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.biblioteca.api_biblioteca.exceptions.RestErrorMessage;
+import com.biblioteca.api_biblioteca.exceptions.autenticacao.ErroGeracaoTokenExcecao;
+import com.biblioteca.api_biblioteca.exceptions.emprestimo.LivroIndisponivelException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
@@ -35,6 +42,17 @@ public class RestExceptionHandler{
         return criarRespostaErro(HttpStatus.BAD_REQUEST, exception.getMessage());
     }
 
+    @ExceptionHandler(LivroIndisponivelException.class)
+    public ResponseEntity<RestErrorMessage> handleLivroIndisponivel (LivroIndisponivelException exception){
+        return criarRespostaErro(HttpStatus.CONFLICT, exception.getMessage());
+    }
+
+    @ExceptionHandler(ErroGeracaoTokenExcecao.class)
+    public ResponseEntity<RestErrorMessage> handleErroGeracaoToken(ErroGeracaoTokenExcecao exception){
+        return criarRespostaErro(HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro interno ao processar a autenticação.");
+    }
+
+
     // 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<List<RestErrorMessage>> handleMethodArgumentNotValid(MethodArgumentNotValidException exception) {
@@ -47,6 +65,7 @@ public class RestExceptionHandler{
 
         return ResponseEntity.badRequest().body(errors);
     }
+
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<RestErrorMessage> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
@@ -67,4 +86,23 @@ public class RestExceptionHandler{
         return criarRespostaErro(HttpStatus.BAD_REQUEST, message);
         
     }
+
+    @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
+    public ResponseEntity<RestErrorMessage> handleCredenciaisInvalidas(){
+        return criarRespostaErro(HttpStatus.UNAUTHORIZED, "Credenciais inválidas. Verifique o email e a senha.");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<RestErrorMessage> handleAcessoNegado(){
+        return criarRespostaErro(HttpStatus.FORBIDDEN, "Acesso negado. Você não tem permissão para realizar essa operação.");
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<RestErrorMessage> handleIntegridadeDeDados(){
+        return criarRespostaErro(HttpStatus.CONFLICT, "A operação não pôde ser concluída dedido a um conflito de dados (ex: registro duplicado).");
+    }
+
+
+
+
 }

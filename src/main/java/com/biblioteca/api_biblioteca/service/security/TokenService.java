@@ -12,6 +12,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
+import com.biblioteca.api_biblioteca.exceptions.autenticacao.ErroGeracaoTokenExcecao;
+import com.biblioteca.api_biblioteca.exceptions.autenticacao.TokenInvalidoException;
 
 @Service
 public class TokenService {
@@ -32,7 +34,7 @@ public class TokenService {
             
             return token;
         } catch (JWTCreationException exception) {
-            throw new RuntimeException("Erro ao gerar o token", exception);
+            throw new ErroGeracaoTokenExcecao("Erro ao gerar o token", exception);
         }
     }
 
@@ -45,9 +47,7 @@ public class TokenService {
                 .verify(token)
                 .getSubject();
         } catch (JWTVerificationException exception) {
-            System.out.println("\n\n\n\nToken inválido: " + exception.getMessage());
-            System.out.println("Causa: " + exception.getCause());
-            return "";
+            throw new TokenInvalidoException("Token inválido ou expirado.");
         }
     }
 

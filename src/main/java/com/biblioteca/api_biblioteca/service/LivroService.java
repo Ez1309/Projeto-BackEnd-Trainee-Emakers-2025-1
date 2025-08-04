@@ -1,6 +1,7 @@
 package com.biblioteca.api_biblioteca.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LivroResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Livro;
+import com.biblioteca.api_biblioteca.exceptions.emprestimo.LivroIndisponivelException;
 import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
+import com.biblioteca.api_biblioteca.exceptions.livro.LivroDuplicadoException;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
 
 @Service
@@ -31,6 +34,11 @@ public class LivroService {
     }
 
     public LivroResponseDTO criarLivro(LivroRequestDTO livroRequestDTO){
+
+        if (livroRepository.existsByNomeAndAutorAndDataLancamento(livroRequestDTO.nome(), livroRequestDTO.autor(), livroRequestDTO.dataLancamento())){
+            throw new LivroDuplicadoException("Um livro com essas características já existe.");
+        }
+
         Livro livro = new Livro(livroRequestDTO);
         livroRepository.save(livro);
 
@@ -40,6 +48,12 @@ public class LivroService {
     public LivroResponseDTO atualizarLivro(Long idLivro, LivroRequestDTO livroRequestDTO){
         
         Livro livro = getLivroEntityById(idLivro);
+
+        Optional<Livro> livroExistente = livroRepository.findByNomeAndAutorAndDataLancamento(livroRequestDTO.nome(), livroRequestDTO.autor(), livroRequestDTO.dataLancamento());
+
+        if(livroExistente.isPresent() && !livroExistente.get().getIdLivro().equals(idLivro)) {
+            throw new LivroDuplicadoException("Já existe outro livro cadastrado com estes mesmos dados");
+        }
 
         livro.setNome(livroRequestDTO.nome());
         livro.setAutor(livroRequestDTO.autor());
@@ -53,6 +67,10 @@ public class LivroService {
     public String deletarLivro(Long idLivro){
         
         Livro livro = getLivroEntityById(idLivro);
+
+        if (!livro.getDisponivel()){
+            throw new LivroIndisponivelException("Não é possível deletar um livro que está atualmente emprestado.");
+        }
 
         livroRepository.delete(livro);
 

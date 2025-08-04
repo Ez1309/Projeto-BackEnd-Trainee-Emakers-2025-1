@@ -11,7 +11,8 @@ import com.biblioteca.api_biblioteca.client.EnderecoViaCep;
 import com.biblioteca.api_biblioteca.client.ViaCepClient;
 import com.biblioteca.api_biblioteca.data.dto.request.RegisterRequestDTO;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
-import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
+import com.biblioteca.api_biblioteca.exceptions.autenticacao.EmailJaCadastradoException;
+import com.biblioteca.api_biblioteca.exceptions.pessoa.CepInvalidoException;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 
 import jakarta.transaction.Transactional;
@@ -38,7 +39,7 @@ public class AuthService implements UserDetailsService{
 
         // Verifica se o usuário já existe no banco
         if (pessoaRepository.findByEmail(registerDTO.email()) != null) {
-            throw new OperacaoInvalidaException("O email informado já está em uso.");
+            throw new EmailJaCadastradoException("O email informado já está em uso.");
         }
 
         // Resgata o CEP informado
@@ -47,7 +48,7 @@ public class AuthService implements UserDetailsService{
 
         // Verifica se o CEP informado existe
         if (endereco != null && Boolean.TRUE.equals(endereco.erro())) {
-            throw new OperacaoInvalidaException("O CEP informado é inválido.");
+            throw new CepInvalidoException("O CEP informado é inválido.");
         }
 
         // Criptografa a senha informada
