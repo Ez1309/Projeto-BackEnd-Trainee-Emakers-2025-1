@@ -51,7 +51,7 @@ public class PessoaController {
         return ResponseEntity.status(HttpStatus.OK).body(pessoaService.atualizarPessoa(idPessoa, pessoaRequestDTO));
     }
 
-    @DeleteMapping(value = "/delete/{idPessoa}")
+    @DeleteMapping(value = "/{idPessoa}/delete")
     public ResponseEntity<String> deletarPessoa(@PathVariable Long idPessoa){
         return ResponseEntity.status(HttpStatus.OK).body(pessoaService.deletarPessoa(idPessoa));
     }
