@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.biblioteca.api_biblioteca.data.dto.request.EmprestimoRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.EmprestimoResponseDTO;
+import com.biblioteca.api_biblioteca.data.dto.response.EmprestimoUsuarioResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Emprestimo;
 import com.biblioteca.api_biblioteca.data.entity.Livro;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
@@ -34,7 +35,7 @@ public class EmprestimoService {
     private LivroRepository livroRepository;
 
     @Transactional
-    public EmprestimoResponseDTO criarEmprestimo(EmprestimoRequestDTO emprestimoRequestDTO, Pessoa pessoaLogada){
+    public EmprestimoUsuarioResponseDTO criarEmprestimo(EmprestimoRequestDTO emprestimoRequestDTO, Pessoa pessoaLogada){
 
         Livro livro = livroRepository.findById(emprestimoRequestDTO.idLivro())
         // Exceção caso não encontre o livro
@@ -63,11 +64,11 @@ public class EmprestimoService {
         livroRepository.save(livro);
         emprestimoRepository.save(emprestimo);
 
-        return new EmprestimoResponseDTO(emprestimo);
+        return new EmprestimoUsuarioResponseDTO(emprestimo);
     }
 
     @Transactional
-    public EmprestimoResponseDTO realizarDevolucao(Long idEmprestimo, Pessoa pessoaLogada){
+    public EmprestimoUsuarioResponseDTO realizarDevolucao(Long idEmprestimo, Pessoa pessoaLogada){
         Emprestimo emprestimo = getEmprestimoEntityById(idEmprestimo);
 
         if(!emprestimo.getPessoa().getIdPessoa().equals(pessoaLogada.getIdPessoa())){
@@ -87,40 +88,16 @@ public class EmprestimoService {
         livroRepository.save(livro);
         emprestimoRepository.save(emprestimo);
 
-        return new EmprestimoResponseDTO(emprestimo);
+        return new EmprestimoUsuarioResponseDTO(emprestimo);
     }
 
     @Transactional
-    public List<EmprestimoResponseDTO> getEmprestimos(Pessoa pessoaLogada){
+    public List<EmprestimoUsuarioResponseDTO> getMeusEmprestimos(Pessoa pessoaLogada){
         List<Emprestimo> emprestimos = emprestimoRepository.findByPessoa(pessoaLogada);
         return emprestimos.stream()
-        .map(EmprestimoResponseDTO::new)
-        .collect(Collectors.toList());
+                .map(EmprestimoUsuarioResponseDTO::new)
+                .collect(Collectors.toList());
     }
-
-    // public EmprestimoResponseDTO atualizarEmprestimo(Long idEmprestimo, EmprestimoRequestDTO emprestimoRequestDTO){
-        
-    //     Emprestimo emprestimo = getEmprestimoEntityById(idEmprestimo);
-
-    //     emprestimo.setPessoa(emprestimoRequestDTO.pessoa());
-    //     emprestimo.setLivro(emprestimoRequestDTO.livro());
-    //     emprestimo.setDataEmprestimo(emprestimoRequestDTO.dataEmprestimo());
-    //     emprestimo.setDataDevolucaoAgendada(emprestimoRequestDTO.dataDevolucaoAgendada());
-    //     emprestimo.setDataDevolucaoReal(emprestimoRequestDTO.dataDevolucaoReal());
-    //     emprestimo.setStatus(emprestimoRequestDTO.status());
-
-    //     emprestimoRepository.save(emprestimo);
-    //     return new EmprestimoResponseDTO(emprestimo);
-    // }
-
-    // public String deletarEmprestimo(Long idEmprestimo){
-        
-    //     Emprestimo emprestimo = getEmprestimoEntityById(idEmprestimo);
-
-    //     emprestimoRepository.delete(emprestimo);
-
-    //     return "Emprestimo id: " + idEmprestimo + " deletado";
-    // }
 
     public List<EmprestimoResponseDTO> getAllEmprestimos(){
         return emprestimoRepository.findAll().stream().map(EmprestimoResponseDTO::new).collect(Collectors.toList());

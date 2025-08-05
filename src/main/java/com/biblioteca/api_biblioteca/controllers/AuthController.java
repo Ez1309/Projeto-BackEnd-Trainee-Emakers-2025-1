@@ -5,10 +5,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.biblioteca.api_biblioteca.data.dto.request.AlterarSenhaRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.request.AuthRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.request.RegisterRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LoginResponseDTO;
@@ -25,7 +28,7 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private AuthService authorizationService;
+    private AuthService authService;
 
     @Autowired
     private TokenService tokenService;
@@ -43,7 +46,13 @@ public class AuthController {
     @PostMapping("/registrar")
     public ResponseEntity<Void> registrar(@RequestBody @Valid RegisterRequestDTO registerDTO){
       
-        authorizationService.registrar(registerDTO);
+        authService.registrar(registerDTO);
         return ResponseEntity.status((HttpStatus.CREATED)).build();
+    }
+
+    @PostMapping("/me/alterar-senha")
+    public ResponseEntity<Void> alterarSenha(@RequestBody @Valid AlterarSenhaRequestDTO alterarSenhaRequestDTO, @AuthenticationPrincipal Pessoa pessoaLogada){
+        authService.alterarSenha(alterarSenhaRequestDTO, pessoaLogada);
+        return ResponseEntity.noContent().build();
     }
 }

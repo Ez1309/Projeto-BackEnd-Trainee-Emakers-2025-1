@@ -1,6 +1,7 @@
 package com.biblioteca.api_biblioteca.config;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 import com.biblioteca.api_biblioteca.service.security.TokenService;
 
@@ -33,10 +35,19 @@ public class SecurityFilter extends OncePerRequestFilter{
 
         if (token != null){
             var email = tokenService.validarToken(token);
-            UserDetails pessoa = pessoaRepository.findByEmail(email);
+            if (email != null){
+                Optional<Pessoa> pessoaOptional = pessoaRepository.findByEmail(email);
 
-            var authentication = new UsernamePasswordAuthenticationToken(pessoa, null, pessoa.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                if(pessoaOptional.isPresent()){
+                    UserDetails pessoa = pessoaOptional.get();
+                    var authentication = new UsernamePasswordAuthenticationToken(pessoa, null, pessoa.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                }
+
+                
+            }
+          
         }
         filterChain.doFilter(request, response);
     }

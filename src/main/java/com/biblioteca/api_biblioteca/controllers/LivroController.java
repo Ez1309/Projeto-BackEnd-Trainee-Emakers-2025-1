@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/livros")
-@Tag(name = "Livros", description = "Endpoints para gerenciamento de Livros.")
+@Tag(name = "Livros", description = "Endpoints para gerenciamento de Livros")
 public class LivroController {
     
     @Autowired
@@ -86,7 +86,7 @@ public class LivroController {
 
     @Operation(
         summary = "Busca um livro por ID",
-        description = "Retorna detalhes de um livro específico com base no seu ID.",
+        description = "Retorna informações de um livro específico com base no seu ID.",
         responses = {
             @ApiResponse(
                 responseCode = "200",
@@ -213,14 +213,26 @@ public class LivroController {
                         }
                     ]
                     """
-                )
+                )   
             )
         ),
         @ApiResponse(
             responseCode = "409",
             description = "Conflito - Um livro com estes mesmos dados já existe",
-            content = @Content(mediaType = "application/json", 
-                               schema = @Schema(implementation = RestErrorMessage.class))
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = RestErrorMessage.class),
+                examples = @ExampleObject(
+                    value = """
+                    {
+                        "timestamp": "2025-08-2025 17:27:00",
+                        "status": 409,
+                        "error": "Conflict",
+                        "message": "Um livro com essas características já existe"
+                    }
+                    """
+                )
+            )
         ),
         @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
     })
@@ -257,10 +269,16 @@ public class LivroController {
             responseCode = "200",
             description = "Sucesso - Livro atualizado",
             content = @Content(
-                mediaType = "text/plain", // O tipo de mídia agora é texto simples
-                schema = @Schema(implementation = String.class),
+                mediaType = "application/json",
+                schema = @Schema(implementation = LivroRequestDTO.class),
                 examples = @ExampleObject(
-                    value = "Livro id: 1 atualizado com sucesso" // Exemplo da sua string de retorno
+                    value = """
+                    {
+                        "nome": "O Hobbit (Edição Ilustrada)",
+                        "autor": "J.R.R. Tolkien",
+                        "dataLancamento": "21/09/2012"
+                    }
+                    """
                 )
             )
         ),
@@ -293,7 +311,7 @@ public class LivroController {
                                     "timestamp": "04-08-2025 19:31:00",
                                     "status": 404,
                                     "error": "Not Found",
-                                    "message": "Não foi encontrada a entidade com o id: 99"
+                                    "message": "Não foi encontrada a entidade com o id: 1"
                                 }
                                 """
                             ))
@@ -330,15 +348,9 @@ public class LivroController {
     )
     @ApiResponses(value = {
         @ApiResponse(
-            responseCode = "200",
+            responseCode = "204",
             description = "Sucesso - Livro deletado",
-            content = @Content(
-                mediaType = "text/plain",
-                schema = @Schema(implementation = String.class),
-                examples = @ExampleObject(
-                    value = "Livro id: 1 deletado"
-                )
-            )
+            content = @Content
         ),
         @ApiResponse(
             responseCode = "404",
@@ -352,7 +364,7 @@ public class LivroController {
                         "timestamp": "04-08-2025 19:45:00",
                         "status": 404,
                         "error": "Not Found",
-                        "message": "Não foi encontrada a entidade com o id: 99"
+                        "message": "Não foi encontrada a entidade com o id: 1"
                     }
                     """
                 )
@@ -384,12 +396,12 @@ public class LivroController {
     })
     @DeleteMapping("/{idLivro}/delete")
 
-    public ResponseEntity<String> deletarLivro(
+    public ResponseEntity<Void> deletarLivro(
         @Parameter(description = "ID do livro a ser deletado.", example = "1", required = true)
         @PathVariable Long idLivro
     ) {
         livroService.deletarLivro(idLivro);
-        return ResponseEntity.ok(livroService.deletarLivro(idLivro));
+        return ResponseEntity.noContent().build();
     }
 
     

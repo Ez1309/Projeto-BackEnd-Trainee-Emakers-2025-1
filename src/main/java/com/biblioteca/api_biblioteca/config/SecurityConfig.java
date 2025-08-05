@@ -26,33 +26,41 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable()) // Desabilita CSRF
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Endpoints públicos de autenticação
-                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
+            // ------------------- Endpoints Públicos -------------------
+            .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+            .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
+            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                // Acesso ao swagger
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+            // ------------------- Endpoints do Usuário Logado (Self-Service) -------------------
+            .requestMatchers(HttpMethod.POST, "/auth/me/alterar-senha").hasRole("USER")
+            
 
-                // Regras para Livros (Admin gerencia, todos podem ver)
-                .requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/livros/**").authenticated() // Qualquer usuário logado pode ver os livros
+            // ------------------- Endpoints Gerais (USER & ADMIN) -------------------
+            .requestMatchers(HttpMethod.POST, "/emprestimos/create").hasRole("USER")
+            .requestMatchers(HttpMethod.PATCH, "/emprestimos/{idEmprestimo}/devolucao").hasRole("USER")
+            // Admin vê a lista completa de empréstimos
+            .requestMatchers(HttpMethod.GET, "/emprestimos/all").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/emprestimos/meus-emprestimos").hasRole("USER")
+            
+            .requestMatchers(HttpMethod.GET, "/emprestimos/{idEmprestimo}").authenticated() // Qualquer um logado pode ver um empréstimo específico
 
-                // --- REGRAS PARA EMPRÉSTIMOS (AQUI ESTÁ O AJUSTE) ---\
-                .requestMatchers(HttpMethod.POST, "/emprestimos/create").hasRole("USER")
-                .requestMatchers(HttpMethod.PATCH, "/emprestimos/{idEmprestimo}/devolucao").hasRole("USER")
-                .requestMatchers(HttpMethod.GET, "/emprestimos/all").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/emprestimos/meus-emprestimos").hasRole("USER")
-                .requestMatchers(HttpMethod.GET, "/emprestimos/{idEmprestimo}").authenticated()
+            // ------------------- Endpoints Exclusivos do ADMIN -------------------
+            // Admin gerencia o ciclo de vida completo dos livros
+            .requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN")
+            .requestMatchers(HttpMethod.GET, "/livros/**").authenticated() // Qualquer um logado pode ver livros
 
-                // Regras para Pessoas (só admin)
-                .requestMatchers("/pessoa/**").hasRole("ADMIN")
+            
 
-                // Qualquer outra requisição precisa no mínimo de autenticação
-                .anyRequest().authenticated()
-                
-            )
+            // Admin gerencia o ciclo de vida completo das pessoas
+            .requestMatchers("/pessoas/**").hasRole("ADMIN")
+
+            // Regra final: Qualquer outra requisição não listada acima precisa, no mínimo, de autenticação.
+            // Esta regra foi efetivamente substituída pelas regras mais específicas acima, mas é uma boa
+            // prática de segurança mantê-la como "pega-tudo" no final.
+            .anyRequest().authenticated()
+        )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
         
         return http.build();

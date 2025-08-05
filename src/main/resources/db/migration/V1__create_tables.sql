@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS pessoas (
     cidade VARCHAR(100),
     estado VARCHAR(2),
     email VARCHAR(100) NOT NULL,
-    senha VARCHAR(100) NOT NULL,
+    senha VARCHAR(100),
     role VARCHAR(50) NOT NULL
 );
 

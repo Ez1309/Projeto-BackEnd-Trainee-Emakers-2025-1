@@ -38,10 +38,6 @@ public record PessoaRequestDTO(
     @Email(message = "Email inválido")
     String email,
 
-    @NotBlank(message = "Senha é obrigatória")
-    @Size(max = 100, message = "O campo senha não pode ultrapassar {max} caracteres")
-    String senha,
-
     @NotNull(message = "O role é obrigatório")
     PessoaRole role
 ) {

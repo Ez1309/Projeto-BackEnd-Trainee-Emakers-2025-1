@@ -48,7 +48,7 @@ public class Pessoa implements UserDetails {
     @Column(name="email", nullable = false, length = 100)
     private String email;
 
-    @Column(name="senha", nullable = false, length = 100)
+    @Column(name="senha", nullable = true, length = 100)
     private String senha;
 
     @Enumerated(EnumType.STRING)
@@ -63,7 +63,6 @@ public class Pessoa implements UserDetails {
         this.cpf = pessoaRequestDTO.cpf();
         this.cep = pessoaRequestDTO.cep().replaceAll("[^\\d]", "");
         this.email = pessoaRequestDTO.email();
-        this.senha = pessoaRequestDTO.senha();
         this.role = pessoaRequestDTO.role();
     }
 

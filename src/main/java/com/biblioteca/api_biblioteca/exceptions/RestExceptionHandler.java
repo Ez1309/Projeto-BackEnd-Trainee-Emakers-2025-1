@@ -7,16 +7,19 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.biblioteca.api_biblioteca.exceptions.autenticacao.EmailJaCadastradoException;
 import com.biblioteca.api_biblioteca.exceptions.autenticacao.ErroGeracaoTokenExcecao;
 import com.biblioteca.api_biblioteca.exceptions.emprestimo.LivroIndisponivelException;
 import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
 import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
 import com.biblioteca.api_biblioteca.exceptions.livro.LivroDuplicadoException;
+import com.biblioteca.api_biblioteca.exceptions.pessoa.CpfJaCadastradoException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
@@ -52,10 +55,16 @@ public class RestExceptionHandler{
         return criarRespostaErro(HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro interno ao processar a autenticação.");
     }
 
-    @ExceptionHandler(LivroDuplicadoException.class)
-    public ResponseEntity<RestErrorMessage> handleLivroDuplicado(LivroDuplicadoException exception) {
+    @ExceptionHandler({LivroDuplicadoException.class, EmailJaCadastradoException.class, CpfJaCadastradoException.class})
+    public ResponseEntity<RestErrorMessage> handleRecursoDuplicado(RuntimeException exception) {
         return criarRespostaErro(HttpStatus.CONFLICT, exception.getMessage());
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<RestErrorMessage> handleBadCredential(BadCredentialsException exception){
+        return criarRespostaErro(HttpStatus.BAD_REQUEST, exception.getMessage());
+    }
+
 
 
     // 

@@ -15,17 +15,5 @@ public record EmprestimoRequestDTO(
     @Future(message = "A data de devolução deve ser uma data futura.")
     LocalDate dataDevolucaoAgendada
 
-    // @JsonFormat(pattern = "dd/MM/yyyy")
-    // LocalDate dataEmprestimo,
-
-    // @JsonFormat(pattern = "dd/MM/yyyy")
-    // LocalDate dataDevolucaoReal,
-
-    // Pessoa pessoa,
-
-    // Livro livro,
-
-    // StatusEmprestimo status
-
 ) {
 }

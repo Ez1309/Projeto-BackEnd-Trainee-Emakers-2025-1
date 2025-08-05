@@ -52,7 +52,7 @@ public class LivroService {
         Optional<Livro> livroExistente = livroRepository.findByNomeAndAutorAndDataLancamento(livroRequestDTO.nome(), livroRequestDTO.autor(), livroRequestDTO.dataLancamento());
 
         if(livroExistente.isPresent() && !livroExistente.get().getIdLivro().equals(idLivro)) {
-            throw new LivroDuplicadoException("Já existe outro livro cadastrado com estes mesmos dados");
+            throw new LivroDuplicadoException("Um livro com essas características já existe");
         }
 
         livro.setNome(livroRequestDTO.nome());
@@ -64,7 +64,7 @@ public class LivroService {
         return new LivroResponseDTO(livro);
     }
 
-    public String deletarLivro(Long idLivro){
+    public void deletarLivro(Long idLivro){
         
         Livro livro = getLivroEntityById(idLivro);
 
@@ -74,7 +74,7 @@ public class LivroService {
 
         livroRepository.delete(livro);
 
-        return "Livro id: " + idLivro + " deletado";
+        
     }
 
     private Livro getLivroEntityById(Long idLivro){
