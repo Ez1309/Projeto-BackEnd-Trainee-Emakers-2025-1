@@ -13,19 +13,11 @@ import jakarta.validation.constraints.Size;
 
 public record LivroRequestDTO(
 
-    @Schema(description = "Título completo do livro.", example = "O Guia do Mochileiro das Galáxias", requiredMode = RequiredMode.REQUIRED)
-    @NotBlank(message = "Nome é obrigatório")
-    @Size(max = 100, message = "O campo nome não pode ultrapassar {max} caracteres")
-    String nome,
+        @Schema(description = "Título completo do livro.", example = "O Guia do Mochileiro das Galáxias", requiredMode = RequiredMode.REQUIRED) @NotBlank(message = "Nome é obrigatório") @Size(max = 100, message = "O campo nome não pode ultrapassar {max} caracteres") String nome,
 
-    @NotBlank(message = "Autor é obrigatório")
-    @Size(max = 100, message = "O campo autor não pode ultrapassar {max} caracteres")
-    String autor,
+        @NotBlank(message = "Autor é obrigatório") @Size(max = 100, message = "O campo autor não pode ultrapassar {max} caracteres") String autor,
 
-    @NotNull(message = "Data de lançamento é obrigatória")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    @PastOrPresent(message = "A data de lançamento não pode estar no futuro")
-    LocalDate dataLancamento
+        @NotNull(message = "Data de lançamento é obrigatória") @JsonFormat(pattern = "dd/MM/yyyy") @PastOrPresent(message = "A data de lançamento não pode estar no futuro") LocalDate dataLancamento
 
-){  
+) {
 }

@@ -1,9 +1,19 @@
 package com.biblioteca.api_biblioteca.data.entity;
 
 import java.time.LocalDate;
+
 import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
-import jakarta.persistence.*;
-import lombok.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -13,27 +23,26 @@ import lombok.*;
 public class Livro {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idLivro;
 
-    @Column(name="nome", nullable = false, length = 100)
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name="autor", nullable = false, length = 100)
+    @Column(name = "autor", nullable = false, length = 100)
     private String autor;
 
-    @Column(name="data_lancamento", nullable = false)
+    @Column(name = "data_lancamento", nullable = false)
     private LocalDate dataLancamento;
 
-    @Column(name="disponivel", nullable = false)
+    @Column(name = "disponivel", nullable = false)
     private Boolean disponivel = true;
 
     @Builder
-    public Livro(LivroRequestDTO livroRequestDTO){
+    public Livro(LivroRequestDTO livroRequestDTO) {
         this.nome = livroRequestDTO.nome();
         this.autor = livroRequestDTO.autor();
         this.dataLancamento = livroRequestDTO.dataLancamento();
-        // VOLTAR DEPOIS
         this.disponivel = true;
     }
 

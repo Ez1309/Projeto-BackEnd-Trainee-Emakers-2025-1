@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS emprestimos (
     data_devolucao_agendada DATE NOT NULL,
     data_devolucao_real DATE NULL,
     status VARCHAR(50) NOT NULL,
-    
-    CONSTRAINT fk_pessoa FOREIGN KEY (id_pessoa) REFERENCES pessoas(id_pessoa),
-    CONSTRAINT fk_livro FOREIGN KEY (id_livro) REFERENCES livros(id_livro)
+    CONSTRAINT fk_pessoa FOREIGN KEY (id_pessoa) REFERENCES pessoas (id_pessoa),
+    CONSTRAINT fk_livro FOREIGN KEY (id_livro) REFERENCES livros (id_livro)
 );

@@ -4,15 +4,15 @@ import com.biblioteca.api_biblioteca.data.enums.PessoaRole;
 
 public record PessoaAdminUpdateDTO(
 
-    String nome,
+        String nome,
 
-    String cpf,
+        String cpf,
 
-    String email,
+        String email,
 
-    String cep,
+        String cep,
 
-    PessoaRole role
+        PessoaRole role
 
 ) {
 }

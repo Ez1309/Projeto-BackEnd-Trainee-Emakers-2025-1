@@ -7,18 +7,16 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public record LivroResponseDTO(
 
-    Long id,
+        Long id,
 
-    String name,
+        String name,
 
-    String autor,
+        String autor,
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    LocalDate dataLancamento,
+        @JsonFormat(pattern = "dd/MM/yyyy") LocalDate dataLancamento,
 
-    Boolean disponivel
-){
-    public LivroResponseDTO(Livro livro){
+        Boolean disponivel) {
+    public LivroResponseDTO(Livro livro) {
         this(livro.getIdLivro(), livro.getNome(), livro.getAutor(), livro.getDataLancamento(), livro.getDisponivel());
     }
 }

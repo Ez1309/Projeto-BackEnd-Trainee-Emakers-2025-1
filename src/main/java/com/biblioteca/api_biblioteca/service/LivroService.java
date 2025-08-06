@@ -17,25 +17,26 @@ import com.biblioteca.api_biblioteca.repository.LivroRepository;
 
 @Service
 public class LivroService {
-    
+
     @Autowired
     private LivroRepository livroRepository;
 
-    public List<LivroResponseDTO> getAllLivros(){
+    public List<LivroResponseDTO> getAllLivros() {
         List<Livro> livros = livroRepository.findAll();
 
         return livros.stream().map(LivroResponseDTO::new).collect(Collectors.toList());
     }
-    
-    public LivroResponseDTO getLivroById(Long idLivro){
+
+    public LivroResponseDTO getLivroById(Long idLivro) {
         Livro livro = getLivroEntityById(idLivro);
 
         return new LivroResponseDTO(livro);
     }
 
-    public LivroResponseDTO criarLivro(LivroRequestDTO livroRequestDTO){
+    public LivroResponseDTO criarLivro(LivroRequestDTO livroRequestDTO) {
 
-        if (livroRepository.existsByNomeAndAutorAndDataLancamento(livroRequestDTO.nome(), livroRequestDTO.autor(), livroRequestDTO.dataLancamento())){
+        if (livroRepository.existsByNomeAndAutorAndDataLancamento(livroRequestDTO.nome(), livroRequestDTO.autor(),
+                livroRequestDTO.dataLancamento())) {
             throw new LivroDuplicadoException("Um livro com essas características já existe.");
         }
 
@@ -45,13 +46,14 @@ public class LivroService {
         return new LivroResponseDTO(livro);
     }
 
-    public LivroResponseDTO atualizarLivro(Long idLivro, LivroRequestDTO livroRequestDTO){
-        
+    public LivroResponseDTO atualizarLivro(Long idLivro, LivroRequestDTO livroRequestDTO) {
+
         Livro livro = getLivroEntityById(idLivro);
 
-        Optional<Livro> livroExistente = livroRepository.findByNomeAndAutorAndDataLancamento(livroRequestDTO.nome(), livroRequestDTO.autor(), livroRequestDTO.dataLancamento());
+        Optional<Livro> livroExistente = livroRepository.findByNomeAndAutorAndDataLancamento(livroRequestDTO.nome(),
+                livroRequestDTO.autor(), livroRequestDTO.dataLancamento());
 
-        if(livroExistente.isPresent() && !livroExistente.get().getIdLivro().equals(idLivro)) {
+        if (livroExistente.isPresent() && !livroExistente.get().getIdLivro().equals(idLivro)) {
             throw new LivroDuplicadoException("Um livro com essas características já existe");
         }
 
@@ -64,21 +66,20 @@ public class LivroService {
         return new LivroResponseDTO(livro);
     }
 
-    public void deletarLivro(Long idLivro){
-        
+    public void deletarLivro(Long idLivro) {
+
         Livro livro = getLivroEntityById(idLivro);
 
-        if (!livro.getDisponivel()){
+        if (!livro.getDisponivel()) {
             throw new LivroIndisponivelException("Não é possível deletar um livro que está atualmente emprestado.");
         }
 
         livroRepository.delete(livro);
 
-        
     }
 
-    private Livro getLivroEntityById(Long idLivro){
+    private Livro getLivroEntityById(Long idLivro) {
         return livroRepository.findById(idLivro).orElseThrow(() -> new EntidadeNaoEncontradaException(idLivro));
     }
-    
+
 }

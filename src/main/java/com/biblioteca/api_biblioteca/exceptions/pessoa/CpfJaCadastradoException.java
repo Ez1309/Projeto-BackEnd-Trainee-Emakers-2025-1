@@ -7,8 +7,8 @@ import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaExceptio
 
 @ResponseStatus(HttpStatus.CONFLICT)
 public class CpfJaCadastradoException extends OperacaoInvalidaException {
-    
-    public CpfJaCadastradoException(String message){
+
+    public CpfJaCadastradoException(String message) {
         super(message);
     }
 }

@@ -10,8 +10,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.biblioteca.api_biblioteca.data.dto.request.PessoaRequestDTO;
 import com.biblioteca.api_biblioteca.data.enums.PessoaRole;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -21,44 +30,41 @@ import lombok.*;
 public class Pessoa implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPessoa;
 
-    @Column(name="nome", nullable = false, length = 100)
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(name="cpf", nullable = false, length = 11)
+    @Column(name = "cpf", nullable = false, length = 11)
     private String cpf;
 
-    @Column(name="cep", nullable = false, length = 9)
+    @Column(name = "cep", nullable = false, length = 9)
     private String cep;
 
-    @Column(name="rua", length = 100)
+    @Column(name = "rua", length = 100)
     private String rua;
 
-    @Column(name="bairro", length = 100)
+    @Column(name = "bairro", length = 100)
     private String bairro;
 
-    @Column(name="cidade", length = 100)
+    @Column(name = "cidade", length = 100)
     private String cidade;
 
-    @Column(name="estado", length = 2)
+    @Column(name = "estado", length = 2)
     private String estado;
 
-    @Column(name="email", nullable = false, length = 100)
+    @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    @Column(name="senha", nullable = true, length = 100)
+    @Column(name = "senha", nullable = true, length = 100)
     private String senha;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="role", nullable = false, length = 50)
+    @Column(name = "role", nullable = false, length = 50)
     private PessoaRole role;
 
-
-
-
-    public Pessoa(PessoaRequestDTO pessoaRequestDTO){
+    public Pessoa(PessoaRequestDTO pessoaRequestDTO) {
         this.nome = pessoaRequestDTO.nome();
         this.cpf = pessoaRequestDTO.cpf();
         this.cep = pessoaRequestDTO.cep().replaceAll("[^\\d]", "");
@@ -66,7 +72,7 @@ public class Pessoa implements UserDetails {
         this.role = pessoaRequestDTO.role();
     }
 
-    public Pessoa(String nome, String cpf, String cep, String email, String senha){
+    public Pessoa(String nome, String cpf, String cep, String email, String senha) {
         this.nome = nome;
         this.cpf = cpf;
         this.cep = cep;
@@ -75,22 +81,18 @@ public class Pessoa implements UserDetails {
         this.role = PessoaRole.USER;
     }
 
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == PessoaRole.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        if (this.role == PessoaRole.ADMIN)
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
-
-
 
     @Override
     public String getPassword() {
         return senha;
     }
-
-
 
     @Override
     public String getUsername() {

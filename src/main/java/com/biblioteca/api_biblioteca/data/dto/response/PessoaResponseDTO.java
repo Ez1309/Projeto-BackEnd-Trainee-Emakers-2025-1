@@ -5,27 +5,27 @@ import com.biblioteca.api_biblioteca.data.enums.PessoaRole;
 
 public record PessoaResponseDTO(
 
-    Long id,
+        Long id,
 
-    String name,
+        String name,
 
-    String cpf,
+        String cpf,
 
-    String cep,
+        String cep,
 
-    String rua,
+        String rua,
 
-    String bairro,
+        String bairro,
 
-    String cidade,
+        String cidade,
 
-    String estado,
+        String estado,
 
-    String email,
+        String email,
 
-    PessoaRole papel
-){
-    public PessoaResponseDTO(Pessoa pessoa){
-        this(pessoa.getIdPessoa(), pessoa.getNome(), pessoa.getCpf(), pessoa.getCep(), pessoa.getRua(), pessoa.getBairro(), pessoa.getCidade(), pessoa.getEstado(), pessoa.getEmail(), pessoa.getRole());
+        PessoaRole papel) {
+    public PessoaResponseDTO(Pessoa pessoa) {
+        this(pessoa.getIdPessoa(), pessoa.getNome(), pessoa.getCpf(), pessoa.getCep(), pessoa.getRua(),
+                pessoa.getBairro(), pessoa.getCidade(), pessoa.getEstado(), pessoa.getEmail(), pessoa.getRole());
     }
 }

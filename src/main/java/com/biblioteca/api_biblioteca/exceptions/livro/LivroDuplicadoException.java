@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
 
 @ResponseStatus(HttpStatus.CONFLICT)
-public class LivroDuplicadoException extends OperacaoInvalidaException{
-    
-    public LivroDuplicadoException(String message){
+public class LivroDuplicadoException extends OperacaoInvalidaException {
+
+    public LivroDuplicadoException(String message) {
         super(message);
     }
 }

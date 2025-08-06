@@ -11,5 +11,5 @@ public class PrazoExcedidoException extends OperacaoInvalidaException {
     public PrazoExcedidoException(String message) {
         super(message);
     }
-    
+
 }

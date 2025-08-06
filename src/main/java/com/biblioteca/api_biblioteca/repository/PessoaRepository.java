@@ -9,7 +9,7 @@ import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
-    
+
     Optional<Pessoa> findByEmail(String email);
 
     Optional<Pessoa> findByCpf(String cpf);

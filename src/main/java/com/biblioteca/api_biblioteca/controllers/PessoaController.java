@@ -35,23 +35,13 @@ import jakarta.validation.Valid;
 @RequestMapping("/pessoas")
 @Tag(name = "Pessoas", description = "Endpoints para gerenciamento de Pessoas (Acesso exclusivo de ADMIN)")
 public class PessoaController {
-    
+
     @Autowired
     private PessoaService pessoaService;
 
-    @Operation(
-        summary = "Lista todas as pessoas cadastradas (ADMIN)",
-        description = "Retorna uma lista com todas as pessoas cadastradas no sistema. Requer permissão de ADMIN."
-    )
+    @Operation(summary = "Lista todas as pessoas cadastradas (ADMIN)", description = "Retorna uma lista com todas as pessoas cadastradas no sistema. Requer permissão de ADMIN.")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Sucesso - Lista de pessoas retornada",
-            content = @Content(
-                mediaType = "application/json",
-                array = @ArraySchema(schema = @Schema(implementation = PessoaResponseDTO.class)),
-                examples = @ExampleObject(
-                    value = """
+            @ApiResponse(responseCode = "200", description = "Sucesso - Lista de pessoas retornada", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PessoaResponseDTO.class)), examples = @ExampleObject(value = """
                     [
                         {
                             "id": 1,
@@ -78,30 +68,17 @@ public class PessoaController {
                             "papel": "USER"
                         }
                     ]
-                    """
-                )
-            )
-        ),
-        @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
+                    """))),
+            @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
     })
     @GetMapping("/all")
-    public ResponseEntity<List<PessoaResponseDTO>> getAllPessoas(){
+    public ResponseEntity<List<PessoaResponseDTO>> getAllPessoas() {
         return ResponseEntity.ok(pessoaService.getAllPessoas());
     }
 
-    @Operation(
-        summary = "Busca uma pessoa por ID (ADMIN)",
-        description = "Retorna informações de uma pessoa específica com base no seu ID. Requer permissão de ADMIN."
-    )
+    @Operation(summary = "Busca uma pessoa por ID (ADMIN)", description = "Retorna informações de uma pessoa específica com base no seu ID. Requer permissão de ADMIN.")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Sucesso - Pessoa encontrada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PessoaResponseDTO.class),
-                examples = @ExampleObject(
-                    value = """
+            @ApiResponse(responseCode = "200", description = "Sucesso - Pessoa encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaResponseDTO.class), examples = @ExampleObject(value = """
                     {
                         "id": 2,
                         "name": "Regina Júlia Almada",
@@ -114,74 +91,34 @@ public class PessoaController {
                         "email": "reginajul_almada@gmail.com",
                         "papel": "USER"
                     }
-                    """
-                )
-            )
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Não Encontrado - O ID da pessoa informada não existe",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RestErrorMessage.class),
-                examples = @ExampleObject(
-                    value = """
+                    """))),
+            @ApiResponse(responseCode = "404", description = "Não Encontrado - O ID da pessoa informada não existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class), examples = @ExampleObject(value = """
                     {
                         "timestamp": "04-08-2025 19:45:00",
                         "status": 404,
                         "error": "Not Found",
                         "message": "Não foi encontrada a entidade com o id: 1"
                     }
-                    """
-                )
-            )
-        ),
-        @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
+                    """))),
+            @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
     })
     @GetMapping("/{idPessoa}/find")
     public ResponseEntity<PessoaResponseDTO> getPessoaById(
-        @Parameter(description = "ID da pessoa a ser buscada.", example = "1", required = true)
-        @PathVariable Long idPessoa){
+            @Parameter(description = "ID da pessoa a ser buscada.", example = "1", required = true) @PathVariable Long idPessoa) {
         return ResponseEntity.ok(pessoaService.getPessoaById(idPessoa));
     }
 
-    @Operation(
-        summary = "Cria uma nova pessoa (ADMIN)",
-        description = "Administrador cadastra um novo usuário no sistema. A senha é definida como nula; o usuário precisará usar um fluxo de recuperação de senha para definir uma antes do primeiro login. Requer permissão de ADMIN.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Dados da pessoa a ser criada, sem o campo senha.",
-            required = true,
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PessoaResponseDTO.class),
-                examples = @ExampleObject(
-                    value = """
-                    {
-                        "id": 2,
-                        "name": "Regina Júlia Almada",
-                        "cpf": "93958818609",
-                        "cep": "81900749",
-                        "rua": "Rua Cláudio Alves de Lima",
-                        "bairro": "Sítio Cercado",
-                        "cidade": "Curitiba",
-                        "estado": "PR",
-                        "email": "reginajul_almada@gmail.com",
-                        "papel": "USER"
-                    }
-                    """
-                )
-            )
-        )
-    )
+    @Operation(summary = "Cria uma nova pessoa (ADMIN)", description = "Administrador cadastra um novo usuário no sistema. A senha é definida como nula; o usuário precisará usar um fluxo de recuperação de senha para definir uma antes do primeiro login. Requer permissão de ADMIN.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados da pessoa a ser criada, sem o campo senha.", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaRequestDTO.class), examples = @ExampleObject(value = """
+            {
+                "name": "Regina Júlia Almada",
+                "cpf": "93958818609",
+                "cep": "81900749",
+                "email": "reginajul_almada@gmail.com",
+                "papel": "USER"
+            }
+            """))))
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "Sucesso - Pessoa criada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PessoaResponseDTO.class),
-                examples = @ExampleObject(
-                    value = """
+            @ApiResponse(responseCode = "201", description = "Sucesso - Pessoa criada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaResponseDTO.class), examples = @ExampleObject(value = """
                     {
                         "id": 2,
                         "name": "Regina Júlia Almada",
@@ -194,17 +131,8 @@ public class PessoaController {
                         "email": "reginajul_almada@gmail.com",
                         "papel": "USER"
                     }
-                    """
-                )
-            )
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Requisição Inválida - Dados inválidos",
-            content = @Content(mediaType = "application/json",
-            array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)),
-            examples = @ExampleObject(
-                value = """
+                    """))),
+            @ApiResponse(responseCode = "400", description = "Requisição Inválida - Dados inválidos", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """
                     [
                         {
                             "timestamp": "05-08-2025 18:10:15",
@@ -235,75 +163,45 @@ public class PessoaController {
                             "status": 400,
                             "error": "Bad Request",
                             "message": "CPF Inválido"
-	                    }
+                     }
                     ]
-                    """
-                )
-            )
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Conflito - Uma pessoa com estes mesmos dados já existe",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RestErrorMessage.class),
-                examples = @ExampleObject(
-                    value = """
-                    {
-                        "timestamp": "2025-08-2025 17:27:00",
-                        "status": 409,
-                        "error": "Conflict",
-                        "message": "Uma pessoa com essas características já existe"
-                    }
-                    """
-                )
-            )
-        ),
-        @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
+                    """))),
+            @ApiResponse(responseCode = "409", description = "Conflito - Uma pessoa com estes mesmos dados já existe", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """
+                    [
+                        {
+                            "timestamp": "06-08-2025 10:40:00",
+                            "status": 409,
+                            "error": "Conflict",
+                            "message": "O email informado já está em uso."
+                        },
+                        {
+                            "timestamp": "06-08-2025 10:40:31",
+                            "status": 409,
+                            "error": "Conflict",
+                            "message": "O CPF informado já está cadastrado"
+                        }
+                    ]
+                    """))),
+            @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
     })
     @PostMapping("/create")
-    public ResponseEntity<PessoaResponseDTO> criarPessoa(@Valid @RequestBody PessoaRequestDTO pessoaRequestDTO){
+    public ResponseEntity<PessoaResponseDTO> criarPessoa(@Valid @RequestBody PessoaRequestDTO pessoaRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.criarPessoa(pessoaRequestDTO));
     }
 
-    
-    @Operation(
-        summary = "Atualiza uma pessoa existente (ADMIN)",
-        description = "Atualiza os dados de uma com base no seu ID. Apenas os campos no corpo da requisição são alterados. Requer permissão de ADMIN.",
-        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "Novos dados para a pessoa. O campo senha não é permitido para essa operação",
-            required = true,
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PessoaAdminUpdateDTO.class),
-                examples = @ExampleObject(
-                    value = """
-                    {
-                        "name": "Regina Júlia Almada",
-                        "cpf": "93958818609",
-                        "cep": "81900749",
-                        "rua": "Rua Cláudio Alves de Lima",
-                        "bairro": "Sítio Cercado",
-                        "cidade": "Curitiba",
-                        "estado": "PR",
-                        "email": "reginajul_almada@gmail.com",
-                        "papel": "USER"
-                    }
-                    """
-                )
-            )
-        )
-    )
+    @Operation(summary = "Atualiza uma pessoa existente (ADMIN)", description = "Atualiza os dados de uma com base no seu ID. Apenas os campos no corpo da requisição são alterados. Requer permissão de ADMIN.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Novos dados para a pessoa. O campo senha não é permitido para essa operação", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaAdminUpdateDTO.class), examples = @ExampleObject(value = """
+            {
+                "name": "Regina Júlia Almada",
+                "cpf": "93958818609",
+                "cep": "81900749",
+                "email": "reginajul_almada@gmail.com",
+                "papel": "USER"
+            }
+            """))))
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Sucesso - Pessoa atualizada",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = PessoaAdminUpdateDTO.class),
-                examples = @ExampleObject(
-                    value = """
+            @ApiResponse(responseCode = "200", description = "Sucesso - Pessoa atualizada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaResponseDTO.class), examples = @ExampleObject(value = """
                     {
+                        "id": 1,
                         "name": "Regina Júlia Almada",
                         "cpf": "93958818609",
                         "cep": "81900749",
@@ -314,116 +212,66 @@ public class PessoaController {
                         "email": "reginajul_almada@gmail.com",
                         "papel": "USER"
                     }
-                    """
-                )
-            )
-        ),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Requisição Inválida - Dados do corpo da requisição são inválidos",
-            content = @Content(mediaType = "application/json", 
-                            array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)),
-                            examples = @ExampleObject(
-                                value = """
-                                [
-                                    {
-                                        "timestamp": "05-08-2025 18:03:35",
-                                        "status": 400,
-                                        "error": "Bad Request",
-                                        "message": "O CPF deve conter 11 dígitos, sem pontos ou traços"
-                                    },
-                                    {
-                                        "timestamp": "05-08-2025 18:03:35",
-                                        "status": 400,
-                                        "error": "Bad Request",
-                                        "message": "CPF Inválido"
-                                    }
-                                ]
-                                    """
-                            ))
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Não Encontrado - O ID da pessoa informada não existe",
-            content = @Content(mediaType = "application/json", 
-                            schema = @Schema(implementation = RestErrorMessage.class),
-                            examples = @ExampleObject(
-                                value = """
-                                {
-                                    "timestamp": "04-08-2025 19:31:00",
-                                    "status": 404,
-                                    "error": "Not Found",
-                                    "message": "Não foi encontrada a entidade com o id: 1"
-                                }
-                                """
-                            ))
-        ),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Conflito - Já existe outra pessoa com os mesmos dados informados",
-            content = @Content(mediaType = "application/json", 
-                            schema = @Schema(implementation = RestErrorMessage.class),
-                            examples = @ExampleObject(
-                                value = """
-                                {
-                                    "timestamp": "04-08-2025 19:32:00",
-                                    "status": 409,
-                                    "error": "Conflict",
-                                    "message": "Já existe outra pessoa cadastrada com estes mesmos dados."
-                                }
-                                """
-                            ))
-        ),
-        @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
+                    """))),
+            @ApiResponse(responseCode = "400", description = "Requisição Inválida - Dados do corpo da requisição são inválidos", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """
+                    [
+                        {
+                            "timestamp": "05-08-2025 18:03:35",
+                            "status": 400,
+                            "error": "Bad Request",
+                            "message": "O CPF deve conter 11 dígitos, sem pontos ou traços"
+                        },
+                        {
+                            "timestamp": "05-08-2025 18:03:35",
+                            "status": 400,
+                            "error": "Bad Request",
+                            "message": "CPF Inválido"
+                        }
+                    ]
+                        """))),
+            @ApiResponse(responseCode = "404", description = "Não Encontrado - O ID da pessoa informada não existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class), examples = @ExampleObject(value = """
+                    {
+                        "timestamp": "04-08-2025 19:31:00",
+                        "status": 404,
+                        "error": "Not Found",
+                        "message": "Não foi encontrada a entidade com o id: 1"
+                    }
+                    """))),
+            @ApiResponse(responseCode = "409", description = "Conflito - Já existe outra pessoa com os mesmos dados informados", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class), examples = @ExampleObject(value = """
+                    {
+                        "timestamp": "04-08-2025 19:32:00",
+                        "status": 409,
+                        "error": "Conflict",
+                        "message": "Já existe outra pessoa cadastrada com estes mesmos dados."
+                    }
+                    """))),
+            @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
     })
 
     @PatchMapping("/{idPessoa}/update")
     public ResponseEntity<PessoaResponseDTO> atualizarPessoa(
-        @Parameter(description = "ID da pessoa a ser atualizada.", example = "1", required = true) 
-        @PathVariable Long idPessoa, 
-        @Valid @RequestBody PessoaAdminUpdateDTO pessoaAdminUpdateDTO){
+            @Parameter(description = "ID da pessoa a ser atualizada.", example = "1", required = true) @PathVariable Long idPessoa,
+            @Valid @RequestBody PessoaAdminUpdateDTO pessoaAdminUpdateDTO) {
         return ResponseEntity.ok(pessoaService.atualizarPessoaAdmin(idPessoa, pessoaAdminUpdateDTO));
     }
 
-    @Operation(
-        summary = "Deleta uma pessoa por ID (ADMIN)",
-        description = "Remove uma pessoa do banco de dados com base no seu ID. Requer permissão de ADMIN"
-    )
+    @Operation(summary = "Deleta uma pessoa por ID (ADMIN)", description = "Remove uma pessoa do banco de dados com base no seu ID. Requer permissão de ADMIN")
     @ApiResponses(value = {
-        @ApiResponse(
-            responseCode = "204",
-            description = "Sucesso - Pessoa deletada",
-            content = @Content
-        ),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Não Encontrado - O ID da pessoa informada não existe",
-            content = @Content(
-                mediaType = "application/json",
-                schema = @Schema(implementation = RestErrorMessage.class),
-                examples = @ExampleObject(
-                    value = """
+            @ApiResponse(responseCode = "204", description = "Sucesso - Pessoa deletada", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Não Encontrado - O ID da pessoa informada não existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class), examples = @ExampleObject(value = """
                     {
                         "timestamp": "04-08-2025 19:45:00",
                         "status": 404,
                         "error": "Not Found",
                         "message": "Não foi encontrada a entidade com o id: 1"
                     }
-                    """
-                )
-            )
-        ),
-        
-        @ApiResponse(
-            responseCode = "403", 
-            description = "Não Autorizado - Requer perfil de ADMIN", 
-            content = @Content
-        )
+                    """))),
+
+            @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
     })
     @DeleteMapping("/{idPessoa}/delete")
     public ResponseEntity<Void> deletarPessoa(
-        @Parameter(description = "ID da pessoa a ser deletada.", example = "1", required = true) 
-        @PathVariable Long idPessoa){
+            @Parameter(description = "ID da pessoa a ser deletada.", example = "1", required = true) @PathVariable Long idPessoa) {
         pessoaService.deletarPessoa(idPessoa);
         return ResponseEntity.noContent().build();
     }

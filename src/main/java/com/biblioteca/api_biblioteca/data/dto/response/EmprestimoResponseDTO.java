@@ -7,21 +7,22 @@ import com.biblioteca.api_biblioteca.data.enums.StatusEmprestimo;
 
 public record EmprestimoResponseDTO(
 
-    Long id,
+        Long id,
 
-    PessoaResponseDTO pessoaResponseDTO,
+        PessoaResponseDTO pessoaResponseDTO,
 
-    LivroResponseDTO livroResponseDTO,
+        LivroResponseDTO livroResponseDTO,
 
-    LocalDate dataEmprestimo,
+        LocalDate dataEmprestimo,
 
-    LocalDate dataDevolucaoAgendada,
+        LocalDate dataDevolucaoAgendada,
 
-    LocalDate dataDevolucaoReal,
+        LocalDate dataDevolucaoReal,
 
-    StatusEmprestimo status
-){
-    public EmprestimoResponseDTO(Emprestimo emprestimo){
-        this(emprestimo.getIdEmprestimo(), new PessoaResponseDTO(emprestimo.getPessoa()), new LivroResponseDTO(emprestimo.getLivro()), emprestimo.getDataEmprestimo(), emprestimo.getDataDevolucaoAgendada(), emprestimo.getDataDevolucaoReal(), emprestimo.getStatus());
+        StatusEmprestimo status) {
+    public EmprestimoResponseDTO(Emprestimo emprestimo) {
+        this(emprestimo.getIdEmprestimo(), new PessoaResponseDTO(emprestimo.getPessoa()),
+                new LivroResponseDTO(emprestimo.getLivro()), emprestimo.getDataEmprestimo(),
+                emprestimo.getDataDevolucaoAgendada(), emprestimo.getDataDevolucaoReal(), emprestimo.getStatus());
     }
 }

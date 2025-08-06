@@ -19,6 +19,7 @@ import com.biblioteca.api_biblioteca.exceptions.pessoa.CepInvalidoException;
 import com.biblioteca.api_biblioteca.exceptions.pessoa.CpfJaCadastradoException;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 
+import jakarta.transaction.Transactional;
 
 @Service
 public class PessoaService {
@@ -29,31 +30,30 @@ public class PessoaService {
     @Autowired
     private ViaCepClient viaCepClient;
 
-    public List<PessoaResponseDTO> getAllPessoas(){
+    public List<PessoaResponseDTO> getAllPessoas() {
         List<Pessoa> pessoas = pessoaRepository.findAll();
 
         return pessoas.stream().map(PessoaResponseDTO::new).collect(Collectors.toList());
     }
 
-    public PessoaResponseDTO getPessoaById(Long idPessoa){
+    public PessoaResponseDTO getPessoaById(Long idPessoa) {
         Pessoa pessoa = getPessoaEntityById(idPessoa);
         return new PessoaResponseDTO(pessoa);
     }
 
-    public PessoaResponseDTO criarPessoa(PessoaRequestDTO pessoaRequestDTO){
+    public PessoaResponseDTO criarPessoa(PessoaRequestDTO pessoaRequestDTO) {
 
-        if (pessoaRepository.existsByEmail(pessoaRequestDTO.email())){
+        if (pessoaRepository.existsByEmail(pessoaRequestDTO.email())) {
             throw new EmailJaCadastradoException("O email informado já está em uso.");
         }
 
-        if (pessoaRepository.existsByCpf(pessoaRequestDTO.cpf())){
+        if (pessoaRepository.existsByCpf(pessoaRequestDTO.cpf())) {
             throw new CpfJaCadastradoException("O CPF informado já está em uso.");
         }
 
         String cepLimpo = pessoaRequestDTO.cep().replaceAll("[^\\d]", "");
         EnderecoViaCep endereco = viaCepClient.consultaCep(cepLimpo);
 
-        // A lógica de validação continua a mesma
         if (endereco != null && Boolean.TRUE.equals(endereco.erro())) {
             throw new CepInvalidoException("O CEP informado é inválido.");
         }
@@ -74,65 +74,69 @@ public class PessoaService {
         return new PessoaResponseDTO(pessoaNova);
     }
 
-    public PessoaResponseDTO atualizarPessoaAdmin(Long idPessoa, PessoaAdminUpdateDTO pessoaAdminUpdateDTO){
-        
+    @Transactional
+    public PessoaResponseDTO atualizarPessoaAdmin(Long idPessoa, PessoaAdminUpdateDTO pessoaAdminUpdateDTO) {
+
         Pessoa pessoaAtualizar = getPessoaEntityById(idPessoa);
 
         EnderecoViaCep endereco = null;
 
-        if(pessoaAdminUpdateDTO.email() != null){
+        if (pessoaAdminUpdateDTO.email() != null) {
             Optional<Pessoa> pessoaComMesmoEmail = pessoaRepository.findByEmail(pessoaAdminUpdateDTO.email());
-            if(pessoaComMesmoEmail.isPresent() && !pessoaComMesmoEmail.get().getIdPessoa().equals(idPessoa)){
+            if (pessoaComMesmoEmail.isPresent() && !pessoaComMesmoEmail.get().getIdPessoa().equals(idPessoa)) {
                 throw new EmailJaCadastradoException("O email informado já está em uso por outro usuário.");
             }
         }
 
-        if(pessoaAdminUpdateDTO.cpf() != null){
+        if (pessoaAdminUpdateDTO.cpf() != null) {
             Optional<Pessoa> pessoaComMesmoCpf = pessoaRepository.findByCpf(pessoaAdminUpdateDTO.cpf());
-            if (pessoaComMesmoCpf.isPresent() && !pessoaComMesmoCpf.get().getIdPessoa().equals(idPessoa)){
+            if (pessoaComMesmoCpf.isPresent() && !pessoaComMesmoCpf.get().getIdPessoa().equals(idPessoa)) {
                 throw new CpfJaCadastradoException("O CPF informado já está em uso  por outro usuário.");
             }
         }
 
-
-        if (pessoaAdminUpdateDTO.cep() != null && !pessoaAdminUpdateDTO.cep().isBlank()){
+        if (pessoaAdminUpdateDTO.cep() != null && !pessoaAdminUpdateDTO.cep().isBlank()) {
             String cepLimpo = pessoaAdminUpdateDTO.cep().replaceAll("[^\\d]", "");
             endereco = viaCepClient.consultaCep(cepLimpo);
         }
 
-        // A lógica de validação continua a mesma
         if (endereco != null && Boolean.TRUE.equals(endereco.erro())) {
             throw new CepInvalidoException("O CEP informado é inválido.");
         }
 
-        if (pessoaAdminUpdateDTO.nome() != null) pessoaAtualizar.setNome(pessoaAdminUpdateDTO.nome());
-        
-        if (pessoaAdminUpdateDTO.cpf() != null) pessoaAtualizar.setCpf(pessoaAdminUpdateDTO.cpf());
-        if (pessoaAdminUpdateDTO.cep() != null) pessoaAtualizar.setCep(pessoaAdminUpdateDTO.cep());
-        
-        if (endereco != null){
+        if (pessoaAdminUpdateDTO.nome() != null)
+            pessoaAtualizar.setNome(pessoaAdminUpdateDTO.nome());
+
+        if (pessoaAdminUpdateDTO.cpf() != null)
+            pessoaAtualizar.setCpf(pessoaAdminUpdateDTO.cpf());
+        if (pessoaAdminUpdateDTO.cep() != null)
+            pessoaAtualizar.setCep(pessoaAdminUpdateDTO.cep());
+
+        if (endereco != null) {
             pessoaAtualizar.setRua(endereco.logradouro());
             pessoaAtualizar.setBairro(endereco.bairro());
             pessoaAtualizar.setCidade(endereco.localidade());
             pessoaAtualizar.setEstado(endereco.uf());
         }
 
-        if (pessoaAdminUpdateDTO.email() != null) pessoaAtualizar.setEmail(pessoaAdminUpdateDTO.email());
-        if (pessoaAdminUpdateDTO.role() != null) pessoaAtualizar.setRole(pessoaAdminUpdateDTO.role());
-        
+        if (pessoaAdminUpdateDTO.email() != null)
+            pessoaAtualizar.setEmail(pessoaAdminUpdateDTO.email());
+        if (pessoaAdminUpdateDTO.role() != null)
+            pessoaAtualizar.setRole(pessoaAdminUpdateDTO.role());
+
         pessoaRepository.save(pessoaAtualizar);
 
         return new PessoaResponseDTO(pessoaAtualizar);
     }
 
-    public void deletarPessoa(Long idPessoa){
-        
+    public void deletarPessoa(Long idPessoa) {
+
         Pessoa pessoa = getPessoaEntityById(idPessoa);
 
         pessoaRepository.delete(pessoa);
     }
 
-    private Pessoa getPessoaEntityById(Long idPessoa){
+    private Pessoa getPessoaEntityById(Long idPessoa) {
         return pessoaRepository.findById(idPessoa).orElseThrow(() -> new EntidadeNaoEncontradaException(idPessoa));
     }
 }

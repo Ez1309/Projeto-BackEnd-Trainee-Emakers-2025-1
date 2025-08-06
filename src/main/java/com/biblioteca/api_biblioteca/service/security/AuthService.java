@@ -14,14 +14,13 @@ import com.biblioteca.api_biblioteca.data.dto.request.AlterarSenhaRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.request.RegisterRequestDTO;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.biblioteca.api_biblioteca.exceptions.autenticacao.EmailJaCadastradoException;
-import com.biblioteca.api_biblioteca.exceptions.autenticacao.SenhaInvalidaException;
+import com.biblioteca.api_biblioteca.exceptions.general.NaoAutorizadoException;
 import com.biblioteca.api_biblioteca.exceptions.pessoa.CepInvalidoException;
 import com.biblioteca.api_biblioteca.exceptions.pessoa.CpfJaCadastradoException;
 import com.biblioteca.api_biblioteca.repository.PessoaRepository;
 
-
 @Service
-public class AuthService implements UserDetailsService{
+public class AuthService implements UserDetailsService {
 
     @Autowired
     PessoaRepository pessoaRepository;
@@ -34,11 +33,12 @@ public class AuthService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return pessoaRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + email));
+        return pessoaRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + email));
     }
 
     @Transactional
-    public void registrar(RegisterRequestDTO registerDTO){
+    public void registrar(RegisterRequestDTO registerDTO) {
 
         // Verifica se o usuário já existe no banco
         if (pessoaRepository.existsByEmail(registerDTO.email())) {
@@ -62,7 +62,8 @@ public class AuthService implements UserDetailsService{
         String senhaCriptografada = passwordEncoder.encode(registerDTO.senha());
 
         // Cria a pessoa usando o contrutor que define o role USER por padrão
-        Pessoa novaPessoa = new Pessoa(registerDTO.nome(), registerDTO.cpf(), registerDTO.cep(), registerDTO.email(), senhaCriptografada);
+        Pessoa novaPessoa = new Pessoa(registerDTO.nome(), registerDTO.cpf(), registerDTO.cep(), registerDTO.email(),
+                senhaCriptografada);
 
         // Preenchimento os dados complementares do endereço
         if (endereco != null) {
@@ -77,10 +78,10 @@ public class AuthService implements UserDetailsService{
     }
 
     @Transactional
-    public void alterarSenha(AlterarSenhaRequestDTO alterarSenhaRequestDTO, Pessoa pessoaLogada){
+    public void alterarSenha(AlterarSenhaRequestDTO alterarSenhaRequestDTO, Pessoa pessoaLogada) {
 
-        if(!passwordEncoder.matches(alterarSenhaRequestDTO.senhaAtual(), pessoaLogada.getSenha())){
-            throw new SenhaInvalidaException("Erro! A senha atual informada está incorreta.");
+        if (!passwordEncoder.matches(alterarSenhaRequestDTO.senhaAtual(), pessoaLogada.getSenha())) {
+            throw new NaoAutorizadoException("A senha atual informada está incorreta.");
         }
 
         String novaSenhaCriptografada = passwordEncoder.encode(alterarSenhaRequestDTO.novaSenha());
@@ -89,5 +90,5 @@ public class AuthService implements UserDetailsService{
         pessoaRepository.save(pessoaLogada);
 
     }
-    
+
 }

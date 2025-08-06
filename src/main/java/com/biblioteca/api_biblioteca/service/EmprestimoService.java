@@ -15,11 +15,11 @@ import com.biblioteca.api_biblioteca.data.entity.Emprestimo;
 import com.biblioteca.api_biblioteca.data.entity.Livro;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 import com.biblioteca.api_biblioteca.data.enums.StatusEmprestimo;
-import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
 import com.biblioteca.api_biblioteca.exceptions.emprestimo.EmprestimoFinalizadoException;
 import com.biblioteca.api_biblioteca.exceptions.emprestimo.LivroIndisponivelException;
 import com.biblioteca.api_biblioteca.exceptions.emprestimo.PrazoExcedidoException;
 import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
+import com.biblioteca.api_biblioteca.exceptions.general.NaoAutorizadoException;
 import com.biblioteca.api_biblioteca.repository.EmprestimoRepository;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
 
@@ -38,10 +38,8 @@ public class EmprestimoService {
     public EmprestimoUsuarioResponseDTO criarEmprestimo(EmprestimoRequestDTO emprestimoRequestDTO, Pessoa pessoaLogada){
 
         Livro livro = livroRepository.findById(emprestimoRequestDTO.idLivro())
-        // Exceção caso não encontre o livro
         .orElseThrow(() -> new EntidadeNaoEncontradaException(emprestimoRequestDTO.idLivro()));
 
-        // Exceção caso o livro não esteja disponível para empréstimo
         if(!livro.getDisponivel()){
             throw new LivroIndisponivelException("O livro '" + livro.getNome() + "' não está disponível para empréstimo");
         }
@@ -72,7 +70,7 @@ public class EmprestimoService {
         Emprestimo emprestimo = getEmprestimoEntityById(idEmprestimo);
 
         if(!emprestimo.getPessoa().getIdPessoa().equals(pessoaLogada.getIdPessoa())){
-            throw new OperacaoInvalidaException("Você não tem permissão para devolver um empréstimo que não é seu.");
+            throw new NaoAutorizadoException("Você não tem permissão para devolver um empréstimo que não é seu.");
         }
 
         if (emprestimo.getStatus() == StatusEmprestimo.DEVOLVIDO) {
