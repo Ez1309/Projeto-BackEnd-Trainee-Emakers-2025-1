@@ -97,7 +97,7 @@ public class AuthController {
 
     @Operation(summary = "Registra um novo usuário", description = "Cria um novo usuário com o perfil 'USER'. O endereço é preenchido automaticamente via API do ViaCEP.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do usuário a ser registrado", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterRequestDTO.class), examples = @ExampleObject(value = """
             {
-                "name": "Regina Júlia Almada",
+                "nome": "Regina Júlia Almada",
                 "cpf": "93958818609",
                 "cep": "81900749",
                 "email": "reginajul_almada@gmail.com",

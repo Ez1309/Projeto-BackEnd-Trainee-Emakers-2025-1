@@ -13,7 +13,7 @@ import jakarta.validation.constraints.Size;
 
 public record LivroRequestDTO(
 
-        @Schema(description = "Título completo do livro.", example = "O Guia do Mochileiro das Galáxias", requiredMode = RequiredMode.REQUIRED) @NotBlank(message = "Nome é obrigatório") @Size(max = 100, message = "O campo nome não pode ultrapassar {max} caracteres") String nome,
+        @NotBlank(message = "Nome é obrigatório") @Size(max = 100, message = "O campo nome não pode ultrapassar {max} caracteres") String nome,
 
         @NotBlank(message = "Autor é obrigatório") @Size(max = 100, message = "O campo autor não pode ultrapassar {max} caracteres") String autor,
 

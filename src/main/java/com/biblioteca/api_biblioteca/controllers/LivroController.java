@@ -43,14 +43,14 @@ public class LivroController {
                     [
                         {
                             "id": 1,
-                            "name": "O Senhor dos Anéis",
+                            "nome": "O Senhor dos Anéis",
                             "autor": "J.R.R. Tolkien",
                             "dataLancamento": "29/07/1954",
                             "disponivel": true
                         },
                         {
                             "id": 2,
-                            "name": "O Guia do Mochileiro das Galáxias",
+                            "nome": "O Guia do Mochileiro das Galáxias",
                             "autor": "Douglas Adams",
                             "dataLancamento": "12/10/1979",
                             "disponivel": false
@@ -69,7 +69,7 @@ public class LivroController {
             @ApiResponse(responseCode = "200", description = "Sucesso - Livro encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LivroResponseDTO.class), examples = @ExampleObject(value = """
                     {
                         "id": 1,
-                        "name": "O Senhor dos Anéis",
+                        "nome": "O Senhor dos Anéis",
                         "autor": "J.R.R. Tolkien",
                         "dataLancamento": "29/07/1954",
                         "disponivel": true
@@ -107,7 +107,7 @@ public class LivroController {
             @ApiResponse(responseCode = "201", description = "Sucesso - Livro criado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LivroResponseDTO.class), examples = @ExampleObject(value = """
                     {
                         "id": 6,
-                        "name": "O Hobbit",
+                        "nome": "O Hobbit",
                         "autor": "J.R.R. Tolkien",
                         "dataLancamento": "21/09/1937",
                         "disponivel": true

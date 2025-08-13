@@ -45,7 +45,7 @@ public class PessoaController {
                     [
                         {
                             "id": 1,
-                            "name": "Gustavo Manoel Ramos",
+                            "nome": "Gustavo Manoel Ramos",
                             "cpf": "06211934025",
                             "cep": "79012140",
                             "rua": "Rua Senador Feijó",
@@ -57,7 +57,7 @@ public class PessoaController {
                         },
                         {
                             "id": 2,
-                            "name": "Regina Júlia Almada",
+                            "nome": "Regina Júlia Almada",
                             "cpf": "93958818609",
                             "cep": "81900749",
                             "rua": "Rua Cláudio Alves de Lima",
@@ -81,7 +81,7 @@ public class PessoaController {
             @ApiResponse(responseCode = "200", description = "Sucesso - Pessoa encontrada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaResponseDTO.class), examples = @ExampleObject(value = """
                     {
                         "id": 2,
-                        "name": "Regina Júlia Almada",
+                        "nome": "Regina Júlia Almada",
                         "cpf": "93958818609",
                         "cep": "81900749",
                         "rua": "Rua Cláudio Alves de Lima",
@@ -110,7 +110,7 @@ public class PessoaController {
 
     @Operation(summary = "Cria uma nova pessoa (ADMIN)", description = "Administrador cadastra um novo usuário no sistema. A senha é definida como nula; o usuário precisará usar um fluxo de recuperação de senha para definir uma antes do primeiro login. Requer permissão de ADMIN.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados da pessoa a ser criada, sem o campo senha.", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaRequestDTO.class), examples = @ExampleObject(value = """
             {
-                "name": "Regina Júlia Almada",
+                "nome": "Regina Júlia Almada",
                 "cpf": "93958818609",
                 "cep": "81900749",
                 "email": "reginajul_almada@gmail.com",
@@ -121,7 +121,7 @@ public class PessoaController {
             @ApiResponse(responseCode = "201", description = "Sucesso - Pessoa criada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaResponseDTO.class), examples = @ExampleObject(value = """
                     {
                         "id": 2,
-                        "name": "Regina Júlia Almada",
+                        "nome": "Regina Júlia Almada",
                         "cpf": "93958818609",
                         "cep": "81900749",
                         "rua": "Rua Cláudio Alves de Lima",
@@ -191,7 +191,7 @@ public class PessoaController {
 
     @Operation(summary = "Atualiza uma pessoa existente (ADMIN)", description = "Atualiza os dados de uma com base no seu ID. Apenas os campos no corpo da requisição são alterados. Requer permissão de ADMIN.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Novos dados para a pessoa. O campo senha não é permitido para essa operação", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaAdminUpdateDTO.class), examples = @ExampleObject(value = """
             {
-                "name": "Regina Júlia Almada",
+                "nome": "Regina Júlia Almada",
                 "cpf": "93958818609",
                 "cep": "81900749",
                 "email": "reginajul_almada@gmail.com",
@@ -202,7 +202,7 @@ public class PessoaController {
             @ApiResponse(responseCode = "200", description = "Sucesso - Pessoa atualizada", content = @Content(mediaType = "application/json", schema = @Schema(implementation = PessoaResponseDTO.class), examples = @ExampleObject(value = """
                     {
                         "id": 1,
-                        "name": "Regina Júlia Almada",
+                        "nome": "Regina Júlia Almada",
                         "cpf": "93958818609",
                         "cep": "81900749",
                         "rua": "Rua Cláudio Alves de Lima",
