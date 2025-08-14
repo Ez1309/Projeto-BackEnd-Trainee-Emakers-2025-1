@@ -13,10 +13,20 @@ public record LivroResponseDTO(
 
         String autor,
 
-        @JsonFormat(pattern = "dd/MM/yyyy") LocalDate dataLancamento,
+        @JsonFormat(pattern = "dd/MM/yyyy")
+        LocalDate dataLancamento,
 
-        Boolean disponivel) {
+        Integer quantidadeTotal,
+        
+        Integer quantidadeDisponivel) {
     public LivroResponseDTO(Livro livro) {
-        this(livro.getIdLivro(), livro.getNome(), livro.getAutor(), livro.getDataLancamento(), livro.getDisponivel());
+        this(
+            livro.getIdLivro(),
+            livro.getNome(),
+            livro.getAutor(),
+            livro.getDataLancamento(),
+            livro.getQuantidadeTotal(),
+            livro.getQuantidadeDisponivel()
+        );
     }
 }

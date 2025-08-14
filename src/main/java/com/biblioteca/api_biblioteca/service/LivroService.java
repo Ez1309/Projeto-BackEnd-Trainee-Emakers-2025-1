@@ -7,13 +7,17 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.biblioteca.api_biblioteca.data.dto.request.AtualizarEstoqueRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LivroResponseDTO;
 import com.biblioteca.api_biblioteca.data.entity.Livro;
 import com.biblioteca.api_biblioteca.exceptions.emprestimo.LivroIndisponivelException;
 import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
+import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
 import com.biblioteca.api_biblioteca.exceptions.livro.LivroDuplicadoException;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class LivroService {
@@ -46,6 +50,27 @@ public class LivroService {
         return new LivroResponseDTO(livro);
     }
 
+    @Transactional
+    public LivroResponseDTO atualizarEstoque(Long idLivro, AtualizarEstoqueRequestDTO atualizarEstoqueRequestDTO){
+        Livro livro = getLivroEntityById(idLivro);
+
+        int quantidadeAjuste = atualizarEstoqueRequestDTO.quantidade();
+
+        if ((livro.getQuantidadeTotal() + quantidadeAjuste) < 0){
+            throw new OperacaoInvalidaException("Ajuste inválido. O estoque total não pode ser negativo");
+        }
+
+        if ((livro.getQuantidadeDisponivel() + quantidadeAjuste) > (livro.getQuantidadeTotal() + quantidadeAjuste)) {
+            throw new OperacaoInvalidaException("Ajuste inválido. A quantidade disponível não pode exceder a quantidade total.");
+        }
+
+        livro.setQuantidadeTotal(livro.getQuantidadeTotal() + quantidadeAjuste);
+        livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + quantidadeAjuste);
+
+        livroRepository.save(livro);
+        return new LivroResponseDTO(livro);
+    }
+
     public LivroResponseDTO atualizarLivro(Long idLivro, LivroRequestDTO livroRequestDTO) {
 
         Livro livro = getLivroEntityById(idLivro);
@@ -70,7 +95,7 @@ public class LivroService {
 
         Livro livro = getLivroEntityById(idLivro);
 
-        if (!livro.getDisponivel()) {
+        if (livro.getQuantidadeDisponivel() < livro.getQuantidadeTotal()) {
             throw new LivroIndisponivelException("Não é possível deletar um livro que está atualmente emprestado.");
         }
 

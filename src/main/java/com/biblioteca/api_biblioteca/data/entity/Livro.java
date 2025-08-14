@@ -35,15 +35,20 @@ public class Livro {
     @Column(name = "data_lancamento", nullable = false)
     private LocalDate dataLancamento;
 
-    @Column(name = "disponivel", nullable = false)
-    private Boolean disponivel = true;
+    @Column(name = "quantidade_total", nullable = false)
+    private Integer quantidadeTotal;
+
+    @Column(name = "quantidade_disponivel", nullable = false)
+    private Integer quantidadeDisponivel;
+
 
     @Builder
     public Livro(LivroRequestDTO livroRequestDTO) {
         this.nome = livroRequestDTO.nome();
         this.autor = livroRequestDTO.autor();
         this.dataLancamento = livroRequestDTO.dataLancamento();
-        this.disponivel = true;
+        this.quantidadeTotal = livroRequestDTO.quantidade() != null ? livroRequestDTO.quantidade() : 1;
+        this.quantidadeDisponivel = this.quantidadeTotal;
     }
 
 }

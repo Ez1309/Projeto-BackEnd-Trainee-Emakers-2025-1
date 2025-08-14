@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.api_biblioteca.client.EnderecoViaCep;
@@ -29,6 +30,9 @@ public class PessoaService {
 
     @Autowired
     private ViaCepClient viaCepClient;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<PessoaResponseDTO> getAllPessoas() {
         List<Pessoa> pessoas = pessoaRepository.findAll();
@@ -60,7 +64,7 @@ public class PessoaService {
 
         Pessoa pessoaNova = new Pessoa(pessoaRequestDTO);
 
-        pessoaNova.setSenha(null);
+        pessoaNova.setSenha(passwordEncoder.encode("123"));
 
         if (endereco != null) {
             pessoaNova.setRua(endereco.logradouro());

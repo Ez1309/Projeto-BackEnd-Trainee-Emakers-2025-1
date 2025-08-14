@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.api_biblioteca.data.dto.request.LivroRequestDTO;
 import com.biblioteca.api_biblioteca.data.dto.response.LivroResponseDTO;
+import com.biblioteca.api_biblioteca.data.dto.request.AtualizarEstoqueRequestDTO;
 import com.biblioteca.api_biblioteca.exceptions.RestErrorMessage;
 import com.biblioteca.api_biblioteca.service.LivroService;
 
@@ -46,14 +48,16 @@ public class LivroController {
                             "nome": "O Senhor dos Anéis",
                             "autor": "J.R.R. Tolkien",
                             "dataLancamento": "29/07/1954",
-                            "disponivel": true
+                            "quantidadeTotal": 5,
+                            "quantidadeDisponvivel": 3
                         },
                         {
                             "id": 2,
                             "nome": "O Guia do Mochileiro das Galáxias",
                             "autor": "Douglas Adams",
                             "dataLancamento": "12/10/1979",
-                            "disponivel": false
+                            "quantidadeTotal": 1,
+                            "quantidadeDisponvivel": 0
                         }
                     ]
                             """))),
@@ -72,7 +76,8 @@ public class LivroController {
                         "nome": "O Senhor dos Anéis",
                         "autor": "J.R.R. Tolkien",
                         "dataLancamento": "29/07/1954",
-                        "disponivel": true
+                        "quantidadeTotal": 4,
+                        "quantidadeDisponvel": 3
                     }
                             """)
 
@@ -100,7 +105,8 @@ public class LivroController {
                     {
                         "nome": "O Hobbit",
                         "autor": "J.R.R. Tolkien",
-                        "dataLancamento": "21/09/1937"
+                        "dataLancamento": "21/09/1937",
+                        "quantidade": 3
                     }
                     """))))
     @ApiResponses(value = {
@@ -110,7 +116,8 @@ public class LivroController {
                         "nome": "O Hobbit",
                         "autor": "J.R.R. Tolkien",
                         "dataLancamento": "21/09/1937",
-                        "disponivel": true
+                        "quantidadeTotal": 4,
+                        "quantidadeDisponivel": 3
                     }
                     """))),
             @ApiResponse(responseCode = "400", description = "Requisição Inválida - Um ou mais campos do corpo da requisição são inválidos", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """
@@ -151,11 +158,46 @@ public class LivroController {
         return ResponseEntity.status(HttpStatus.CREATED).body(livroService.criarLivro(livroRequestDTO));
     }
 
+    @Operation(
+        summary = "Atualiza o estoque de um livro (ADMIN)",
+        description = "Adiciona ou remove cópias de um livro existente. Número positivo adiciona e número negativo remove. Requer permissão de ADMIN.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Quantidade a ser adicionada ou removida ao estoque.",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = AtualizarEstoqueRequestDTO.class),
+                examples = @ExampleObject(
+                    value = """
+                            {
+                                "quantidade": 5
+                            }
+                            """
+                )
+            )
+
+        )
+    )
+     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Sucesso - Estoque atualizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = LivroResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Requisição Inválida - A quantidade informada resulta em estoque negativo", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class))),
+        @ApiResponse(responseCode = "404", description = "Não Encontrado - O livro com o ID informado não existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class))),
+        @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
+    })
+    @PatchMapping("/{idLivro}/estoque")
+    public ResponseEntity<LivroResponseDTO> atualizarEstoque(
+        @Parameter(description = "ID do livro para ajustar o estoque.", required = true)
+        @PathVariable Long idLivro, @Valid @RequestBody AtualizarEstoqueRequestDTO atualizarEstoqueRequestDTO){
+            LivroResponseDTO livroAtualizado = livroService.atualizarEstoque(idLivro, atualizarEstoqueRequestDTO);
+            return ResponseEntity.ok(livroAtualizado);
+        }
+    
     @Operation(summary = "Atualiza um livro existente (ADMIN)", description = "Atualiza os dados de um livro com base no seu ID. Requer permissão de ADMIN.", requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Novos dados para o livro. Todos os campos são obrigatórios.", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = LivroRequestDTO.class), examples = @ExampleObject(value = """
             {
                 "nome": "O Hobbit (Edição Ilustrada)",
                 "autor": "J.R.R. Tolkien",
-                "dataLancamento": "21/09/2012"
+                "dataLancamento": "21/09/2012",
+                "quantidade": 3
             }
             """))))
     @ApiResponses(value = {
@@ -165,7 +207,8 @@ public class LivroController {
                         "nome": "O Hobbit (Edição Ilustrada)",
                         "autor": "J.R.R. Tolkien",
                         "dataLancamento": "21/09/2012",
-                        "disponivel": true
+                        "quantidadeTotal": 4,
+                        "quantidadeDisponivel" 3
                     }
                     """))),
             @ApiResponse(responseCode = "400", description = "Requisição Inválida - Dados do corpo da requisição são inválidos", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """

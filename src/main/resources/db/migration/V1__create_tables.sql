@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS pessoas (
     bairro VARCHAR(100),
     cidade VARCHAR(100),
     estado VARCHAR(2),
-    email VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
     senha VARCHAR(100),
     role VARCHAR(50) NOT NULL
 );
@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS livros (
     nome VARCHAR(100) NOT NULL,
     autor VARCHAR(100) NOT NULL,
     data_lancamento DATE NOT NULL,
-    disponivel BOOLEAN NOT NULL
+    quantidade_total INTEGER NOT NULL,
+    quantidade_disponivel INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS emprestimos (

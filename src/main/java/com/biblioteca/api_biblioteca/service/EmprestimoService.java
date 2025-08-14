@@ -40,8 +40,8 @@ public class EmprestimoService {
         Livro livro = livroRepository.findById(emprestimoRequestDTO.idLivro())
         .orElseThrow(() -> new EntidadeNaoEncontradaException(emprestimoRequestDTO.idLivro()));
 
-        if(!livro.getDisponivel()){
-            throw new LivroIndisponivelException("O livro '" + livro.getNome() + "' não está disponível para empréstimo");
+        if(livro.getQuantidadeDisponivel() == 0){
+            throw new LivroIndisponivelException("Não há cópias do livro '" + livro.getNome() + "' para empréstimo");
         }
 
         long diasDeEmprestimo = ChronoUnit.DAYS.between(LocalDate.now(), emprestimoRequestDTO.dataDevolucaoAgendada());
@@ -49,8 +49,8 @@ public class EmprestimoService {
             throw new PrazoExcedidoException("O período máximo de empréstimo é de 180 dias (6 meses)");
         }
 
-
-        livro.setDisponivel(false);
+        livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel()-1);
+        
 
         Emprestimo emprestimo = new Emprestimo();
         emprestimo.setPessoa(pessoaLogada);
@@ -77,13 +77,12 @@ public class EmprestimoService {
             throw new EmprestimoFinalizadoException("Esse empréstimo já foi finalizado.");
         }
 
+        Livro livro = emprestimo.getLivro();
+        livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + 1);
+        livroRepository.save(livro);
+
         emprestimo.setStatus(StatusEmprestimo.DEVOLVIDO);
         emprestimo.setDataDevolucaoReal(LocalDate.now());
-
-        Livro livro = emprestimo.getLivro();
-        livro.setDisponivel(true);
-
-        livroRepository.save(livro);
         emprestimoRepository.save(emprestimo);
 
         return new EmprestimoUsuarioResponseDTO(emprestimo);

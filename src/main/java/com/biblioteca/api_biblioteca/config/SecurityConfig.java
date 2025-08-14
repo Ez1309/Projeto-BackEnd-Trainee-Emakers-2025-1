@@ -31,16 +31,21 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/registrar").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        
                         .requestMatchers(HttpMethod.POST, "/auth/me/alterar-senha").hasRole("USER")
                         .requestMatchers(HttpMethod.POST, "/emprestimos/create").hasRole("USER")
                         .requestMatchers(HttpMethod.PATCH, "/emprestimos/{idEmprestimo}/devolucao").hasRole("USER")
+
                         .requestMatchers(HttpMethod.GET, "/emprestimos/all").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/emprestimos/meus-emprestimos").hasRole("USER")
-                        .requestMatchers(HttpMethod.GET, "/emprestimos/{idEmprestimo}").authenticated()                                                                                                                                                          
+                        .requestMatchers(HttpMethod.GET, "/emprestimos/{idEmprestimo}").authenticated()
+
                         .requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/livros/**").authenticated() 
+                        .requestMatchers(HttpMethod.GET, "/livros/**").authenticated()
+
+                        .requestMatchers(HttpMethod.PATCH, "/livros/{idLivro}/estoque").hasRole("ADMIN")
                         .requestMatchers("/pessoas/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated())

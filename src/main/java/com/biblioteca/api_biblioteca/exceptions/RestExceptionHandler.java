@@ -10,8 +10,8 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.biblioteca.api_biblioteca.exceptions.autenticacao.EmailJaCadastradoException;
 import com.biblioteca.api_biblioteca.exceptions.autenticacao.ErroGeracaoTokenExcecao;
@@ -24,7 +24,7 @@ import com.biblioteca.api_biblioteca.exceptions.pessoa.CpfJaCadastradoException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class RestExceptionHandler {
 
     private ResponseEntity<RestErrorMessage> criarRespostaErro(HttpStatus status, String message) {
