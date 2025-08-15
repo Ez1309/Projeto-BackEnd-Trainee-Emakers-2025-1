@@ -14,7 +14,9 @@ import com.biblioteca.api_biblioteca.data.entity.Livro;
 import com.biblioteca.api_biblioteca.exceptions.emprestimo.LivroIndisponivelException;
 import com.biblioteca.api_biblioteca.exceptions.general.EntidadeNaoEncontradaException;
 import com.biblioteca.api_biblioteca.exceptions.general.OperacaoInvalidaException;
+import com.biblioteca.api_biblioteca.exceptions.livro.ExclusaoNaoPermitidaException;
 import com.biblioteca.api_biblioteca.exceptions.livro.LivroDuplicadoException;
+import com.biblioteca.api_biblioteca.repository.EmprestimoRepository;
 import com.biblioteca.api_biblioteca.repository.LivroRepository;
 
 import jakarta.transaction.Transactional;
@@ -24,6 +26,9 @@ public class LivroService {
 
     @Autowired
     private LivroRepository livroRepository;
+
+    @Autowired
+    private EmprestimoRepository emprestimoRepository;
 
     public List<LivroResponseDTO> getAllLivros() {
         List<Livro> livros = livroRepository.findAll();
@@ -95,9 +100,14 @@ public class LivroService {
 
         Livro livro = getLivroEntityById(idLivro);
 
+        if (emprestimoRepository.existsByLivro(livro)){
+            throw new ExclusaoNaoPermitidaException("Este livro não pode ser deletado pois já foi emprestado anteriormente.");
+        }
+
         if (livro.getQuantidadeDisponivel() < livro.getQuantidadeTotal()) {
             throw new LivroIndisponivelException("Não é possível deletar um livro que está atualmente emprestado.");
         }
+        
 
         livroRepository.delete(livro);
 

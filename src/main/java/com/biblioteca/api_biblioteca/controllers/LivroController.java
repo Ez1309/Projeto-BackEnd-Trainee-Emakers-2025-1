@@ -258,13 +258,21 @@ public class LivroController {
                         "message": "Não foi encontrada a entidade com o id: 1"
                     }
                     """))),
-            @ApiResponse(responseCode = "409", description = "Conflito - Não é possível deletar um livro que está atualmente emprestado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class), examples = @ExampleObject(value = """
-                    {
-                        "timestamp": "04-08-2025 19:46:00",
-                        "status": 409,
-                        "error": "Conflict",
-                        "message": "Não é possível deletar um livro que está atualmente emprestado."
-                    }
+            @ApiResponse(responseCode = "409", description = "Conflito - Não é possível deletar um livro que está atualmente emprestado ou que já foi emprestado anteriormente", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """
+                    [
+                        {
+                            "timestamp": "04-08-2025 19:46:00",
+                            "status": 409,
+                            "error": "Conflict",
+                            "message": "Não é possível deletar um livro que está atualmente emprestado."
+                        },
+                        {
+                            "timestamp": "15-08-2025 18:42:01",
+                            "status": 409,
+                            "error": "Conflict",
+                            "message": "Este livro não pode ser deletado pois já foi emprestado anteriormente."
+                        }
+                    ]        
                     """))),
             @ApiResponse(responseCode = "403", description = "Não Autorizado - Requer perfil de ADMIN", content = @Content)
     })

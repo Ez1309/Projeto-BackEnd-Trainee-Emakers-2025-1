@@ -53,7 +53,7 @@ public class PessoaController {
                             "cidade": "Campo Grande",
                             "estado": "MS",
                             "email": "gustavo_ramos@outlook.com",
-                            "papel": "ADMIN"
+                            "role": "ADMIN"
                         },
                         {
                             "id": 2,
@@ -65,7 +65,7 @@ public class PessoaController {
                             "cidade": "Curitiba",
                             "estado": "PR",
                             "email": "reginajul_almada@gmail.com",
-                            "papel": "USER"
+                            "role": "USER"
                         }
                     ]
                     """))),
@@ -89,7 +89,7 @@ public class PessoaController {
                         "cidade": "Curitiba",
                         "estado": "PR",
                         "email": "reginajul_almada@gmail.com",
-                        "papel": "USER"
+                        "role": "USER"
                     }
                     """))),
             @ApiResponse(responseCode = "404", description = "Não Encontrado - O ID da pessoa informada não existe", content = @Content(mediaType = "application/json", schema = @Schema(implementation = RestErrorMessage.class), examples = @ExampleObject(value = """
@@ -114,7 +114,7 @@ public class PessoaController {
                 "cpf": "93958818609",
                 "cep": "81900749",
                 "email": "reginajul_almada@gmail.com",
-                "papel": "USER"
+                "role": "USER"
             }
             """))))
     @ApiResponses(value = {
@@ -129,7 +129,7 @@ public class PessoaController {
                         "cidade": "Curitiba",
                         "estado": "PR",
                         "email": "reginajul_almada@gmail.com",
-                        "papel": "USER"
+                        "role": "USER"
                     }
                     """))),
             @ApiResponse(responseCode = "400", description = "Requisição Inválida - Dados inválidos", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """
@@ -195,7 +195,7 @@ public class PessoaController {
                 "cpf": "93958818609",
                 "cep": "81900749",
                 "email": "reginajul_almada@gmail.com",
-                "papel": "USER"
+                "role": "USER"
             }
             """))))
     @ApiResponses(value = {
@@ -210,7 +210,7 @@ public class PessoaController {
                         "cidade": "Curitiba",
                         "estado": "PR",
                         "email": "reginajul_almada@gmail.com",
-                        "papel": "USER"
+                        "role": "USER"
                     }
                     """))),
             @ApiResponse(responseCode = "400", description = "Requisição Inválida - Dados do corpo da requisição são inválidos", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RestErrorMessage.class)), examples = @ExampleObject(value = """

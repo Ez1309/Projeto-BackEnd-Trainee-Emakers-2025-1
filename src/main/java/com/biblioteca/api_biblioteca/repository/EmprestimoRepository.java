@@ -6,10 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.biblioteca.api_biblioteca.data.entity.Emprestimo;
+import com.biblioteca.api_biblioteca.data.entity.Livro;
 import com.biblioteca.api_biblioteca.data.entity.Pessoa;
 
 @Repository
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
 
     List<Emprestimo> findByPessoa(Pessoa pessoa);
+    boolean existsByLivro(Livro livro);
 }
